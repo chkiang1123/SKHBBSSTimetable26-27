@@ -1,227 +1,492 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Teacher Offline Free Slot Finder</title>
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      margin: 15px;
-      background-color: #121826;
-      color: #e2e8f0;
-    }
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      background: #1e293b;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-      border: 1px solid #334155;
-    }
-    h2 {
-      margin-top: 0;
-      color: #60a5fa;
-      font-size: 1.4rem;
-    }
-    .search-box {
-      margin-bottom: 10px;
-    }
-    .search-box input {
-      width: 100%;
-      max-width: 380px;
-      padding: 8px 12px;
-      background-color: #0f172a;
-      border: 1px solid #475569;
-      color: #f8fafc;
-      border-radius: 6px;
-      font-size: 14px;
-      box-sizing: border-box;
-      outline: none;
-    }
-    .search-box input:focus {
-      border-color: #3b82f6;
-    }
-    .teacher-boxes {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      max-height: 180px;
-      overflow-y: auto;
-      border: 1px solid #334155;
-      padding: 10px;
-      border-radius: 6px;
-      background: #0f172a;
-    }
-    .teacher-label {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 8px;
-      background: #1e293b;
-      border: 1px solid #475569;
-      border-radius: 4px;
-      cursor: pointer;
-      user-select: none;
-      font-size: 13px;
-      color: #cbd5e1;
-    }
-    .teacher-label:hover {
-      background: #334155;
-      color: #fff;
-    }
-    .controls {
-      margin-top: 10px;
-      display: flex;
-      gap: 10px;
-    }
-    button.secondary {
-      padding: 6px 14px;
-      background-color: #334155;
-      color: #e2e8f0;
-      border: 1px solid #475569;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 13px;
-    }
-    button.secondary:hover {
-      background-color: #475569;
-      color: #fff;
-    }
-    .status-summary {
-      margin-top: 15px;
-      font-weight: 600;
-      color: #93c5fd;
-    }
-    .table-responsive {
-      overflow-x: auto;
-      margin-top: 12px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 600px;
-    }
-    th, td {
-      border: 1px solid #334155;
-      padding: 10px;
-      text-align: center;
-      font-size: 13px;
-    }
-    th {
-      background-color: #1e40af;
-      color: #ffffff;
-    }
-    td.period-header {
-      background-color: #0f172a;
-      color: #94a3b8;
-      font-weight: bold;
-    }
-    .free-slot {
-      background-color: #064e3b;
-      color: #6ee7b7;
-      font-weight: bold;
-    }
-    .busy-slot {
-      background-color: #7f1d1d;
-      color: #fca5a5;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teacher Free Period Finder</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0d1117;
+  --bg-secondary: #161b22;
+  --bg-tertiary: #21262d;
+  --bg-card: #161b22;
+  --text-primary: #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted: #484f58;
+  --accent: #58a6ff;
+  --accent-dim: #388bfd;
+  --accent-glow: rgba(88, 166, 255, 0.12);
+  --green: #3fb950;
+  --green-dim: rgba(63, 185, 80, 0.15);
+  --border: #30363d;
+  --danger: #f85149;
+  --warning: #d29922;
+  --warning-glow: rgba(210, 153, 34, 0.12);
+  --free-cell: rgba(63, 185, 80, 0.12);
+  --busy-cell: rgba(248, 81, 73, 0.06);
+  --highlight: rgba(63, 185, 80, 0.22);
+  --shadow: 0 3px 12px rgba(0,0,0,0.3);
+  --radius: 8px;
+}
 
-    /* Timeslot Lookup Panel */
-    .lookup-card {
-      background: #0f172a;
-      border: 1px solid #3b82f6;
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 20px;
-    }
-    .lookup-card h3 {
-      margin-top: 0;
-      margin-bottom: 12px;
-      color: #60a5fa;
-      font-size: 1.1rem;
-    }
-    .lookup-controls {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      align-items: center;
-      margin-bottom: 15px;
-    }
-    .lookup-controls select {
-      background: #1e293b;
-      color: #f8fafc;
-      border: 1px solid #475569;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 14px;
-      outline: none;
-    }
-    .lookup-results {
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 6px;
-      padding: 12px;
-    }
-    .category-group {
-      margin-bottom: 10px;
-    }
-    .category-group:last-child {
-      margin-bottom: 0;
-    }
-    .category-title {
-      font-weight: bold;
-      color: #f59e0b;
-      margin-bottom: 6px;
-      font-size: 13px;
-    }
-    .category-title.normal {
-      color: #34d399;
-    }
-    .teacher-tag-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-    .teacher-tag {
-      background: #0f172a;
-      border: 1px solid #475569;
-      color: #e2e8f0;
-      padding: 3px 8px;
-      border-radius: 4px;
-      font-size: 12px;
-    }
-    .teacher-tag.sgds {
-      border-color: #f59e0b;
-      color: #fef08a;
-    }
-  </style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans TC', -apple-system, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  padding: 16px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+header {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+h1 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+h1 span { color: var(--accent); }
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 16px;
+  background: var(--bg-secondary);
+  padding: 3px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.tab {
+  flex: 1;
+  padding: 9px 12px;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.tab.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.tab:hover:not(.active) {
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Teacher Search */
+.teacher-select-wrapper { position: relative; }
+
+.teacher-search {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 16px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-family: 'Noto Sans TC', sans-serif;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.teacher-search:focus { border-color: var(--accent); }
+.teacher-search::placeholder { color: var(--text-muted); }
+
+.teacher-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+  min-height: 28px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--accent-glow);
+  border: 1px solid var(--accent-dim);
+  color: var(--accent);
+  padding: 3px 10px;
+  border-radius: 16px;
+  font-size: 0.78rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  animation: chipIn 0.15s ease;
+}
+
+@keyframes chipIn {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.chip .remove {
+  cursor: pointer;
+  font-size: 0.95rem;
+  line-height: 1;
+  opacity: 0.7;
+  transition: opacity 0.15s;
+}
+
+.chip .remove:hover { opacity: 1; color: var(--danger); }
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-top: 4px;
+  max-height: 220px;
+  overflow-y: auto;
+  z-index: 100;
+  display: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.dropdown.show { display: block; }
+
+.dropdown-item {
+  padding: 8px 14px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  transition: background 0.1s;
+  border-bottom: 1px solid rgba(48, 54, 61, 0.5);
+}
+
+.dropdown-item:last-child { border-bottom: none; }
+.dropdown-item:hover { background: var(--accent-glow); }
+
+.dropdown-item .short {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: var(--accent);
+  margin-right: 6px;
+}
+
+.dropdown-item .name { color: var(--text-secondary); }
+
+/* Slot Search */
+.slot-search {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.slot-search select {
+  padding: 9px 12px;
+  font-size: 16px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', monospace;
+  outline: none;
+  cursor: pointer;
+}
+
+.slot-search select:focus { border-color: var(--accent); }
+
+.btn {
+  padding: 9px 16px;
+  font-size: 0.82rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover { background: var(--accent-dim); }
+
+/* Timetable */
+.timetable-wrapper {
+  overflow-x: auto;
+  margin-top: 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
+.timetable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+  min-width: 520px;
+}
+
+.timetable th {
+  background: var(--bg-tertiary);
+  padding: 8px 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.timetable td {
+  padding: 6px 5px;
+  border: 1px solid var(--border);
+  text-align: center;
+  vertical-align: middle;
+  font-size: 0.7rem;
+  line-height: 1.3;
+  min-width: 70px;
+}
+
+.timetable td.free {
+  background: var(--free-cell);
+  color: var(--green);
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.timetable td.busy {
+  background: var(--busy-cell);
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+}
+
+.timetable td.busy .teacher-loc {
+  display: block;
+  color: var(--danger);
+  opacity: 0.8;
+  font-size: 0.65rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+  margin: 0 auto;
+}
+
+.timetable tr th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--bg-tertiary);
+}
+
+/* Results */
+.results {
+  margin-top: 14px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.results-header {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--green);
+  margin-bottom: 14px;
+  font-weight: 700;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.results-category { margin-bottom: 14px; }
+
+.results-category-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.results-teachers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.teacher-tag {
+  display: inline-block;
+  padding: 4px 9px;
+  border-radius: 5px;
+  font-size: 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.teacher-tag.normal {
+  background: var(--green-dim);
+  border: 1px solid rgba(63, 185, 80, 0.3);
+  color: var(--green);
+}
+
+.teacher-tag.sgds {
+  background: var(--warning-glow);
+  border: 1px solid rgba(210, 153, 34, 0.3);
+  color: var(--warning);
+}
+
+.no-results {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 0.82rem;
+}
+
+.legend {
+  display: flex;
+  gap: 16px;
+  margin-top: 10px;
+  font-size: 0.72rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.legend-dot.free-dot { background: var(--green); opacity: 0.7; }
+.legend-dot.busy-dot { background: var(--danger); opacity: 0.4; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* Responsive */
+@media (max-width: 600px) {
+  body { padding: 10px; }
+  h1 { font-size: 1.2rem; }
+  .section { padding: 12px; }
+  .slot-search { flex-direction: column; align-items: stretch; }
+  .slot-search select { width: 100%; }
+  .btn { width: 100%; text-align: center; }
+  .tabs { overflow-x: auto; }
+  .tab { font-size: 0.72rem; padding: 8px 10px; }
+}
+</style>
 </head>
 <body>
-
 <div class="container">
-  
-  <!-- Timeslot Lookup Engine -->
-  <div class="lookup-card">
-    <h3>Find Available Teachers by Timeslot</h3>
-    <div class="lookup-controls">
-      <label>
-        Select Day:
-        <select id="lookupDay" onchange="runTimeslotLookup()">
-          <option value="1" selected>Day 1</option>
+  <header>
+    <h1><span>//</span> Teacher Free Period Finder</h1>
+    <p class="subtitle">26-27 Timetable &middot; 6 Days &middot; 9 Periods &middot; 58 Teachers</p>
+  </header>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="common">Common Free Periods</div>
+    <div class="tab" data-tab="slot">Search by Time Slot</div>
+  </div>
+
+  <!-- Tab 1: Common Free Periods -->
+  <div class="tab-content active" id="tab-common">
+    <div class="section">
+      <div class="section-title">Select Teachers</div>
+      <div class="teacher-select-wrapper">
+        <input type="text" class="teacher-search" id="teacherSearch" placeholder="Search by short name, English name, or Chinese name..." autocomplete="off">
+        <div class="dropdown" id="teacherDropdown"></div>
+      </div>
+      <div class="teacher-chips" id="selectedChips"></div>
+    </div>
+
+    <div class="section" id="commonResults" style="display:none;">
+      <div class="section-title">Timetable Comparison</div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot free-dot"></div> All Free</div>
+        <div class="legend-item"><div class="legend-dot busy-dot"></div> Busy (class shown)</div>
+      </div>
+      <div class="timetable-wrapper">
+        <table class="timetable" id="commonTable"></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 2: Search by Time Slot -->
+  <div class="tab-content" id="tab-slot">
+    <div class="section">
+      <div class="section-title">Select Time Slot</div>
+      <div class="slot-search">
+        <select id="daySelect">
+          <option value="">Day</option>
+          <option value="1">Day 1</option>
           <option value="2">Day 2</option>
           <option value="3">Day 3</option>
           <option value="4">Day 4</option>
           <option value="5">Day 5</option>
           <option value="6">Day 6</option>
         </select>
-      </label>
-      <label>
-        Select Period:
-        <select id="lookupPeriod" onchange="runTimeslotLookup()">
-          <option value="1" selected>Period 1</option>
+        <select id="periodSelect">
+          <option value="">Period</option>
+          <option value="1">Period 1</option>
           <option value="2">Period 2</option>
           <option value="3">Period 3</option>
           <option value="4">Period 4</option>
@@ -231,245 +496,205 @@
           <option value="8">Period 8</option>
           <option value="9">Period 9</option>
         </select>
-      </label>
-    </div>
-
-    <div class="lookup-results">
-      <div id="lookupHeader" style="font-weight: bold; margin-bottom: 10px; color: #93c5fd;"></div>
-      
-      <div class="category-group">
-        <div class="category-title normal">Normal Teachers:</div>
-        <div id="normalTeacherList" class="teacher-tag-list"></div>
-      </div>
-      
-      <div class="category-group" style="margin-top: 12px;">
-        <div class="category-title">Student Guidance and Discipline Services Teachers:</div>
-        <div id="sgdsTeacherList" class="teacher-tag-list"></div>
+        <button class="btn btn-primary" id="searchSlotBtn">Search</button>
       </div>
     </div>
-  </div>
 
-  <h2>Teacher Free Time Slot Checker (Selected Teachers Overlap)</h2>
-  
-  <div class="search-box">
-    <input type="text" id="teacherSearch" placeholder="Filter teacher name, Chinese name or code..." onkeyup="filterTeachers()">
-  </div>
-
-  <div class="selection-area">
-    <div id="teacherBoxes" class="teacher-boxes"></div>
-    <div class="controls">
-      <button class="secondary" onclick="selectAll(false)">Clear Selection</button>
+    <div class="section" id="slotResults" style="display:none;">
+      <div id="slotResultsContent"></div>
     </div>
-  </div>
-
-  <div id="statusSummary" class="status-summary">No teachers selected. Select teachers above to find free overlapping slots.</div>
-
-  <div class="table-responsive">
-    <table id="timetableGrid">
-      <thead>
-        <tr>
-          <th>Period / Day</th>
-          <th>Day 1</th>
-          <th>Day 2</th>
-          <th>Day 3</th>
-          <th>Day 4</th>
-          <th>Day 5</th>
-          <th>Day 6</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
   </div>
 </div>
 
 <script>
-// Verified Full Teacher Name Mapping from the provided photo list
-const teacherNames = {
-  "BSD": { eng: "Bezant Samantha Diana", chi: "" },
-  "CHC": { eng: "Chan Hin Chiu", chi: "陳憲潮" },
-  "CKY": { eng: "Chan Ka Ying Anna", chi: "陳嘉盈" },
-  "CKK1": { eng: "Chan Kwok Keung", chi: "陳國強" },
-  "CKK": { eng: "Chan Kwok Kwan", chi: "陳國君" },
-  "CLH": { eng: "Chan Lok Hin", chi: "陳諾軒" },
-  "CLI": { eng: "Chan Lok In", chi: "陳絡妍" },
-  "COY": { eng: "Chan Oi Yan", chi: "陳藹欣" },
-  "CSM": { eng: "Chan Shuk Man", chi: "陳淑文" },
-  "CTM": { eng: "Chan Tsz Man", chi: "陳子文" },
-  "CWY": { eng: "Chan Wing Yin", chi: "陳穎賢" },
-  "CYS": { eng: "Chan Yau Sing", chi: "陳有成" },
-  "CYW": { eng: "Chan Yuk Wah", chi: "陳玉華" },
-  "CYC": { eng: "Chan Yung Cheung", chi: "陳容彰" },
-  "CCW": { eng: "Cheung Chi Wai", chi: "張志威" },
-  "CHN": { eng: "Cheung Hoi Ning", chi: "張凱寧" },
-  "CMB": { eng: "Cheung Man Bun", chi: "張汶彬" },
-  "CPH": { eng: "Cheung Pak Ho", chi: "張柏皓" },
-  "CKC": { eng: "Chu Ki Cheong", chi: "朱其昌" },
-  "CTK": { eng: "Chung Ting Kai", chi: "鍾廷楷" },
-  "CYW1": { eng: "Chung Yuen Wah", chi: "鍾沅樺" },
-  "FPY": { eng: "Fong Pik Yuk", chi: "方璧鈺" },
-  "HYL": { eng: "Ho Yi Lok", chi: "何懿洛" },
-  "HCM": { eng: "Hung Chun Man", chi: "洪俊敏" },
-  "HNS": { eng: "Hussain Nibla Shabir", chi: "妮娜" },
-  "KCH": { eng: "Kiang Chi Hong", chi: "姜智康" },
-  "KLH": { eng: "Kong Lai Han", chi: "江麗嫻" },
-  "KY": { eng: "Koo Yiu", chi: "顧耀" },
-  "KPP": { eng: "Kwok Pui Pui", chi: "郭佩佩" },
-  "LKY": { eng: "Lam Ka Yan", chi: "林嘉欣" },
-  "LMP": { eng: "Lam Mei Po", chi: "林美寶" },
-  "LON": { eng: "Lam On Nei", chi: "林安妮" },
-  "LSY": { eng: "Lam Shuk Ying", chi: "林淑螢" },
-  "LWL": { eng: "Lam Wai Ling", chi: "林偉玲" },
-  "LWM": { eng: "Lam Wai Man", chi: "林偉文" },
-  "LNM": { eng: "Lau Nga Man", chi: "劉雅雯" },
-  "LWK1": { eng: "Lau Wing Kwan", chi: "劉永坤" },
-  "LPL": { eng: "Leung Pui Ling", chi: "梁佩玲" },
-  "LCS": { eng: "Li Chi Shing", chi: "李志誠" },
-  "LS": { eng: "Li Silin", chi: "李斯琳" },
-  "LCW": { eng: "Lo Chiu Wing", chi: "盧昭榮" },
-  "LYF": { eng: "Lui Yu Fong", chi: "呂渝方" },
-  "MSM": { eng: "Mak Shuk Man", chi: "麥淑雯" },
-  "MSY": { eng: "Mak Sin Yee", chi: "麥倩儀" },
-  "MTH": { eng: "Mak Tsui Han", chi: "麥翠嫻" },
-  "NOY": { eng: "Ng Oi Yan", chi: "吳靄茵" },
-  "SWP": { eng: "Sha Wai Pak", chi: "沙偉栢" },
-  "SCL": { eng: "Suen Chun Long", chi: "孫雋朗" },
-  "TWF": { eng: "Toa Wai Fook", chi: "陶偉福" },
-  "TMF": { eng: "Tsao Man Fai", chi: "曹文翬" },
-  "TYL": { eng: "Tsoi Yiu Lam", chi: "蔡堯琳" },
-  "WKT": { eng: "Wong Kwok Tai", chi: "黃國大" },
-  "WMH": { eng: "Wong Man Han", chi: "王敏嫻" },
-  "WSF": { eng: "Wong Shing Fung", chi: "黃承鋒" },
-  "WSY": { eng: "Wong Suk Yin", chi: "王淑賢" },
-  "YHM": { eng: "Yao Hing Man", chi: "姚慶萬" },
-  "YKM": { eng: "Yip Kin Man", chi: "葉健文" },
-  "YSP": { eng: "Yu Siu Ping", chi: "余小冰" }
-};
+// ==================== TEACHER DATA (offline-embedded) ====================
+const TEACHERS=[{"s":"BSD","e":"Bezant Samantha Diana","c":"","b":{"1_3":"1D","1_5":"4A","1_7":"2B","2_1":"1A","2_2":"4C","2_4":"2B","2_8":"1D","3_1":"1B","3_2":"1B","3_3":"2B","3_4":"2B","4_2":"3D","4_3":"4D","4_5":"4B","4_6":"2B","4_8":"3D","4_9":"3A","5_3":"2B","5_6":"3A","6_1":"2B","6_2":"2B","6_3":"1C","6_5":"1C"}},{"s":"CHC","e":"Chan Hin Chiu","c":"陳憲潮","b":{"1_2":"6C","1_7":"5D","1_9":"1A","2_1":"5C,5D","2_2":"5C,5D","2_3":"5D","2_4":"1A","2_9":"6C","3_1":"1A","3_2":"1A","3_3":"5D","3_4":"5D","3_5":"6C","4_3":"5D","4_5":"5C,5D","4_6":"5C,5D","4_7":"1A","4_9":"6C","5_1":"6C","5_2":"6C","5_4":"5D","5_5":"1A","6_2":"5D","6_3":"1A","6_5":"6C"}},{"s":"CKY","e":"Chan Ka Ying Anna","c":"陳嘉盈","b":{"1_3":"2A","1_4":"2A","1_7":"3B","1_9":"6A,6B,6C,6D","2_1":"4A,4B,4C,4D","2_3":"6A,6B,6C,6D","2_4":"6A,6B,6C,6D","2_7":"5A,5B,5C,5D","3_1":"4A,4B,4C,4D","3_2":"3C","3_4":"6A,6B,6C,6D","3_8":"5A,5B,5C,5D","3_9":"5A,5B,5C,5D","4_1":"5A,5B,5C,5D","4_2":"4A,4B,4C,4D","4_7":"3A","5_1":"5A,5B,5C,5D","5_2":"5A,5B,5C,5D","5_6":"3D","5_7":"6A,6B,6C,6D","5_8":"4A,4B,4C,4D","5_9":"4A,4B,4C,4D","6_1":"6A,6B,6C,6D","6_2":"6A,6B,6C,6D","6_3":"4A,4B,4C,4D","6_4":"4A,4B,4C,4D","6_6":"5A,5B,5C,5D"}},{"s":"CKK1","e":"Chan Kwok Keung","c":"陳國強","b":{"1_3":"3A","1_7":"6C,6D","1_9":"6A,6B,6C,6D","2_1":"5C,5D","2_2":"5C,5D","2_3":"6A,6B,6C,6D","2_4":"6A,6B,6C,6D","2_5":"3B","2_7":"6C,6D","3_1":"6C,6D","3_2":"6C,6D","3_4":"6A,6B,6C,6D","3_7":"5C,5D","4_5":"5C,5D","4_6":"5C,5D","4_8":"3A","4_9":"2A,2B,2C,2D","5_3":"6C,6D","5_4":"6C,6D","5_5":"3B","5_7":"6A,6B,6C,6D","5_9":"5C,5D","6_1":"6A,6B,6C,6D","6_2":"6A,6B,6C,6D","6_3":"5C,5D","6_6":"6C,6D"}},{"s":"CKK","e":"Chan Kwok Kwan","c":"陳國君","b":{"1_1":"5B","1_3":"6A","1_6":"3C","2_4":"5B","2_5":"6A","2_7":"3C","2_8":"3C","3_3":"3C","3_4":"5B","3_5":"6A","3_8":"5A,5B,5C,5D","3_9":"5A,5B,5C,5D","4_1":"3C","4_3":"5B","4_4":"5B","4_9":"6A","5_1":"5A,5B,5C,5D","5_2":"5A,5B,5C,5D","5_3":"3C","5_5":"6A","5_6":"6A","5_7":"5B","6_2":"5B","6_3":"3C","6_6":"6A"}},{"s":"CLH","e":"Chan Lok Hin","c":"陳諾軒","b":{"1_2":"1B","1_3":"3B","1_4":"3B","1_5":"6A,6B,6C,6D","1_6":"6A,6B,6C,6D","1_8":"2A","2_3":"1B","2_5":"3A","2_6":"3A","2_9":"2A","3_3":"6A,6B,6C,6D","3_4":"2A","3_5":"1B","3_6":"1B","4_3":"6A,6B,6C,6D","4_4":"6A,6B,6C,6D","4_5":"3C","4_6":"3C","4_9":"2A,2B,2C,2D","5_1":"2A","5_3":"1B","5_4":"1B","5_8":"6A,6B,6C,6D","6_1":"2A","6_2":"2A","6_4":"6A,6B,6C,6D","6_7":"1B"}},{"s":"CLI","e":"Chan Lok In","c":"陳絡姸","b":{"1_7":"3A","1_8":"4A,4B,4C,4D","1_9":"4A,4B,4C,4D","2_1":"4A,4B,4C,4D","2_5":"4A,4B,4C,4D","2_6":"4A,4B,4C,4D","2_7":"1A","3_1":"4A,4B,4C,4D","3_3":"1A","3_4":"1A","3_5":"4A,4B,4C,4D","3_8":"3B","3_9":"3D","4_1":"4A,4B,4C,4D","4_2":"4A,4B,4C,4D","4_3":"1A","4_5":"3A","4_9":"2A,2B,2C,2D","5_1":"4A,4B,4C,4D","5_3":"1A","5_4":"1A","5_5":"3D","5_8":"4A,4B,4C,4D","5_9":"4A,4B,4C,4D","6_1":"1A","6_3":"4A,4B,4C,4D","6_4":"4A,4B,4C,4D","6_5":"3B"}},{"s":"COY","e":"Chan Oi Yan","c":"陳藹欣","b":{"1_3":"1D","1_5":"5A","1_6":"5A","1_7":"1D","1_9":"2C","2_1":"5A","2_2":"5A","2_7":"2C","2_8":"2C","3_2":"5A","3_3":"1D","3_4":"1D","3_6":"5A","3_7":"2C","4_1":"1D","4_3":"5A","4_5":"2C","4_6":"2C","5_3":"5A","5_4":"2C","5_5":"1D","5_6":"1D","6_1":"2C","6_5":"1D","6_7":"5A"}},{"s":"CSM","e":"Chan Shuk Man","c":"陳淑文","b":{"1_1":"3B","1_4":"1C","1_7":"3C","2_1":"3A","2_3":"1A","2_5":"1D","2_7":"5A,5B,5C,5D","3_4":"3B","3_5":"3C","3_8":"5A,5B,5C,5D","3_9":"5A,5B,5C,5D","4_1":"5A,5B,5C,5D","4_2":"1B","4_4":"1A","4_9":"3D","5_1":"5A,5B,5C,5D","5_2":"5A,5B,5C,5D","5_5":"3A","5_7":"1D","5_9":"1C","6_2":"1B","6_5":"3D","6_6":"5A,5B,5C,5D"}},{"s":"CTM","e":"Chan Tsz Man","c":"陳子文","b":{"1_1":"4C,4D","1_2":"4C,4D","1_3":"5A,5B,5C,5D","1_4":"5A,5B,5C,5D","2_1":"5C,5D","2_2":"5C,5D","2_4":"4C,4D","2_8":"5A,5B,5C,5D","2_9":"5A,5B,5C,5D","3_6":"3C","3_7":"5C,5D","4_2":"5A,5B,5C,5D","4_5":"5C,5D","4_6":"5C,5D","4_7":"4C,4D","4_8":"4C,4D","4_9":"2A,2B,2C,2D","5_5":"5A,5B,5C,5D","5_7":"4C,4D","5_9":"5C,5D","6_1":"4C,4D","6_3":"5C,5D","6_5":"5A,5B,5C,5D","6_7":"3C"}},{"s":"CWY","e":"Chan Wing Yin","c":"陳穎賢","b":{"1_1":"6D","1_6":"4A","1_7":"3D","1_8":"3D","2_2":"4A","2_7":"3D","2_8":"6D","2_9":"6D","3_5":"3D","3_6":"4A","3_8":"6D","3_9":"6D","4_2":"3D","4_5":"3D","4_6":"6D","4_7":"4A","5_1":"6D","5_5":"4A","5_6":"4A","5_9":"3D","6_1":"4A","6_2":"4A","6_3":"3D","6_4":"3D","6_5":"6D"}},{"s":"CYS","e":"Chan Yau Sing","c":"陳有成","b":{"1_4":"6D","1_7":"2A","2_3":"6A,6B,6C,6D","2_4":"6A,6B,6C,6D","2_5":"6D","2_7":"2A","3_5":"6D","3_6":"6D","3_9":"2A","4_3":"2A","4_4":"2A","4_9":"6D","5_2":"6D","5_5":"2A","5_7":"6A,6B,6C,6D","5_8":"4A,4B,4C,4D","5_9":"4A,4B,4C,4D","6_1":"6A,6B,6C,6D","6_2":"6A,6B,6C,6D","6_3":"4A,4B,4C,4D","6_4":"4A,4B,4C,4D","6_6":"2A","6_7":"6D"}},{"s":"CYW","e":"Chan Yuk Wah","c":"陳玉華","b":{"1_1":"5D","1_2":"5D","1_5":"2D","2_1":"2D","2_2":"2D","2_4":"5D","2_7":"2D","3_2":"5D","3_7":"2D","3_8":"2D","4_6":"2D","4_7":"5D","4_8":"5D","5_6":"5D","5_9":"2D","6_6":"2D","6_7":"5D"}},{"s":"CYC","e":"Chan Yung Cheung","c":"陳容彰","b":{"1_2":"2A","1_4":"2B","1_5":"1D","1_6":"1D","1_7":"2D","2_3":"2D","2_4":"2D","2_5":"2C","3_2":"2D","3_7":"2B","4_3":"1C","4_4":"1C","5_6":"2A","5_8":"2C","6_3":"2C","6_4":"2C"}},{"s":"CCW","e":"Cheung Chi Wai","c":"張志威","b":{"1_1":"5A","1_2":"5A","1_5":"2B","1_6":"2B","1_8":"1C","2_4":"5A","2_5":"2B","2_6":"2B","3_2":"2C","3_3":"5A","3_4":"5A","3_5":"2B","3_7":"2A","3_8":"2B","4_3":"2B","4_5":"2B","4_6":"3A","4_7":"5A","4_8":"1D","5_2":"2B","5_4":"5A","5_5":"2D","5_7":"3D","5_8":"1A","6_1":"5A","6_4":"2B"}},{"s":"CHN","e":"Cheung Hoi Ning","c":"張凱寧","b":{"1_2":"5B","1_6":"2D","1_7":"4D","1_9":"5B","2_1":"5B","2_2":"5B","2_3":"4D","2_8":"2A","3_3":"4D","3_4":"4D","3_5":"5B","3_6":"5B","4_3":"4D","4_4":"4D","4_7":"5B","5_3":"5B","5_5":"4D","5_6":"4D","5_7":"2B","5_9":"2C","6_3":"5B","6_7":"4D"}},{"s":"CMB","e":"Cheung Man Bun","c":"張汶彬","b":{"1_3":"4A,4D","1_4":"4A,4D","1_7":"5B,5C","1_8":"5B,5C","2_1":"2A,2B","2_2":"2A,2B","2_3":"3C,3D","2_4":"3C,3D","3_3":"4B,4C","3_4":"4B,4C","3_7":"6B,6C","3_8":"6B,6C","4_1":"2C,2D","4_2":"2C,2D","4_7":"6A,6D","4_8":"6A,6D","5_1":"1A,1B","5_2":"1A,1B","5_7":"5A,5D","5_8":"5A,5D","6_1":"1C,1D","6_2":"1C,1D","6_3":"3A,3B","6_4":"3A,3B"}},{"s":"CPH","e":"Cheung Pak Ho","c":"張柏皓","b":{"1_1":"1D","1_2":"1D","1_3":"2B","1_4":"1D","1_6":"4B","2_2":"4B","2_3":"1D","2_4":"1D","2_6":"1D","2_8":"2B","2_9":"2B","3_1":"1D","3_5":"1D","3_6":"2B","3_7":"4B","4_3":"1D","4_6":"4B","4_7":"1D","4_8":"2B","4_9":"2A,2B,2C,2D","5_1":"2B","5_3":"1D","5_4":"1D","5_6":"4B","6_1":"4B","6_2":"4B","6_6":"1D","6_7":"1D"}},{"s":"CKC","e":"Chu Ki Cheong","c":"朱其昌","b":{"1_1":"3A","1_5":"6A,6B,6C,6D","1_6":"6A,6B,6C,6D","1_7":"6C,6D","1_8":"4A,4B,4C,4D","1_9":"4A,4B,4C,4D","2_5":"4A,4B,4C,4D","2_6":"4A,4B,4C,4D","2_7":"6C,6D","3_1":"6C,6D","3_2":"6C,6D","3_3":"6A,6B,6C,6D","3_5":"4A,4B,4C,4D","3_7":"3B","3_9":"3A","4_1":"4A,4B,4C,4D","4_3":"6A,6B,6C,6D","4_4":"6A,6B,6C,6D","4_6":"3D","4_9":"2A,2B,2C,2D","5_1":"4A,4B,4C,4D","5_2":"3B","5_3":"6C,6D","5_4":"6C,6D","5_8":"6A,6B,6C,6D","6_2":"3D","6_4":"6A,6B,6C,6D","6_6":"6C,6D"}},{"s":"CTK","e":"Chung Ting Kai","c":"鍾廷楷","b":{"1_9":"5A","2_3":"5A","3_1":"5A","4_5":"5A","4_6":"5A","5_9":"5A","6_2":"5A"}},{"s":"CYW1","e":"Chung Yuen Wah","c":"鍾沅樺","b":{"1_5":"1B","1_6":"1C","1_9":"5C","2_3":"5C","2_4":"1B","2_7":"1B","2_8":"1B","2_9":"1C","3_3":"1C","3_4":"5C","3_5":"1C","3_6":"1C","3_7":"1B","4_3":"5C","4_7":"1B","4_8":"1C","4_9":"1C","5_1":"1C","5_3":"5C","5_4":"5C","5_7":"1B","5_8":"1B","6_2":"5C","6_4":"1B","6_5":"1A","6_6":"1A","6_7":"1C"}},{"s":"FPY","e":"Fong Pik Yuk","c":"方璧鈺","b":{"1_1":"5C","1_2":"5C","1_4":"1B","1_5":"4B","1_6":"1B","2_4":"5C","2_5":"1B","2_6":"1B","2_8":"4B","2_9":"4B","3_3":"5C","3_6":"4B","3_8":"1B","3_9":"1B","4_6":"1B","4_7":"5C","4_8":"5C","4_9":"4B","5_3":"4B","5_4":"4B","5_6":"5C","5_9":"1B","6_1":"5C","6_3":"1B","6_5":"4B"}},{"s":"HYL","e":"Ho Yi Lok","c":"何懿洛","b":{"1_1":"2C","1_2":"2C","1_3":"3D","1_4":"3D","2_3":"3B","2_4":"3B","2_5":"5A,5B","2_6":"5A,5B","2_7":"4A,4B","3_1":"3A","3_2":"3A","3_7":"5A,5B","3_8":"4A,4B","3_9":"4A,4B","4_1":"2B","4_2":"2B","4_3":"4A,4B","4_4":"4A,4B","4_8":"5A,5B","4_9":"5A,5B","5_1":"2D","5_2":"2D","5_6":"5A,5B","5_7":"4A,4B","5_8":"2A","5_9":"2A","6_1":"3C","6_2":"3C","6_4":"5A,5B","6_6":"4A,4B"}},{"s":"HCM","e":"Hung Chun Man","c":"洪俊敏","b":{"1_1":"2D","1_2":"2D","1_5":"1C","1_7":"1A","2_3":"2B","2_9":"1B","3_1":"2A","3_4":"1C","3_5":"1A","3_6":"1D","3_8":"1D","3_9":"1D","4_1":"3D","4_2":"3B","4_5":"1A","4_6":"1A","4_8":"1B","4_9":"1B","5_2":"3A","5_4":"2D","5_5":"2C","5_6":"3C","5_7":"1C","5_8":"1C","6_1":"1B","6_4":"1D"}},{"s":"HNS","e":"Hussain Nibla Shabir","c":"妮娜","b":{"1_1":"1A","1_2":"1A","1_5":"3B","1_6":"2D","1_7":"2C","1_9":"5B","2_1":"1A","2_2":"1A","2_5":"5C","2_7":"2D","2_8":"2A","3_1":"5D","3_2":"5A","3_3":"2A","3_8":"1A","3_9":"3C","4_5":"2B","4_6":"3B","4_8":"1A","4_9":"1A","5_1":"3C","5_6":"1A","5_7":"2B","5_9":"2C","6_7":"1A"}},{"s":"KCH","e":"Kiang Chi Hong","c":"姜智康","b":{"1_1":"4C,4D","1_2":"4C,4D","1_6":"4D","1_9":"2D","2_2":"4D","2_7":"6C,6D","2_9":"2D","3_1":"6C,6D","3_2":"6C,6D","3_5":"2D","3_6":"2D","3_7":"4D","3_8":"4D","4_4":"2D","4_5":"4D","4_7":"4C,4D","4_8":"4C,4D","5_2":"4D","5_3":"6C,6D","5_4":"6C,6D","5_7":"2D","5_8":"1D","5_9":"1D","6_2":"4D","6_4":"2D"}},{"s":"KLH","e":"Kong Lai Han","c":"江麗嫻","b":{"1_1":"1B","1_3":"2A","1_4":"2A","1_5":"1D","1_6":"1D","2_3":"2D","2_4":"2D","2_5":"1A","2_6":"1A","2_7":"1D","3_1":"5C","3_2":"5C","3_3":"1B","3_4":"1B","4_1":"1B","4_2":"1D","4_3":"1C","4_4":"1C","5_5":"2B","5_6":"2B","5_7":"5C","6_3":"2C","6_4":"2C","6_7":"5C"}},{"s":"KY","e":"Koo Yiu","c":"顧耀","b":{"1_3":"5A,5B,5C,5D","1_4":"5A,5B,5C,5D","1_5":"6A,6B,6C,6D","1_6":"6A,6B,6C,6D","1_9":"6A,6B,6C,6D","2_1":"3C","2_3":"6A,6B,6C,6D","2_4":"6A,6B,6C,6D","2_7":"5A,5B,5C,5D","2_8":"5A,5B,5C,5D","2_9":"5A,5B,5C,5D","3_3":"6A,6B,6C,6D","3_4":"6A,6B,6C,6D","3_8":"5A,5B,5C,5D","3_9":"5A,5B,5C,5D","4_1":"5A,5B,5C,5D","4_2":"5A,5B,5C,5D","4_3":"6A,6B,6C,6D","4_4":"6A,6B,6C,6D","4_9":"3C","5_1":"5A,5B,5C,5D","5_2":"5A,5B,5C,5D","5_5":"5A,5B,5C,5D","5_7":"6A,6B,6C,6D","5_8":"6A,6B,6C,6D","6_1":"6A,6B,6C,6D","6_2":"6A,6B,6C,6D","6_4":"6A,6B,6C,6D","6_5":"5A,5B,5C,5D","6_6":"5A,5B,5C,5D"}},{"s":"KPP","e":"Kwok Pui Pui","c":"郭佩佩","b":{"1_1":"6C","1_3":"6D","1_4":"6A","1_8":"5D","1_9":"5D","2_5":"5D","2_6":"5D","3_1":"5D","3_6":"5D","3_9":"3C","4_1":"6B","4_2":"5A,5B,5C,5D","4_4":"5D","4_6":"3B","4_8":"3D","4_9":"3A","5_3":"5D","5_6":"5A,5B","5_9":"5C,5D","6_4":"5D","6_6":"5A,5B,5C,5D"}},{"s":"LKY","e":"Lam Ka Yan","c":"林嘉欣","b":{"1_3":"2D","1_8":"2C","1_9":"6A,6B,6C,6D","2_1":"4A,4B,4C,4D","2_3":"6A,6B,6C,6D","2_4":"6A,6B,6C,6D","3_1":"4A,4B,4C,4D","3_2":"2A","3_3":"2C","3_4":"6A,6B,6C,6D","3_7":"4C","3_8":"4C","4_2":"4A,4B,4C,4D","4_7":"2B","5_2":"2A","5_6":"2D","5_7":"6A,6B,6C,6D","5_8":"4A,4B,4C,4D","5_9":"4A,4B,4C,4D","6_1":"6A,6B,6C,6D","6_2":"6A,6B,6C,6D","6_3":"4A,4B,4C,4D","6_4":"4A,4B,4C,4D","6_7":"2B"}},{"s":"LMP","e":"Lam Mei Po","c":"林美寶","b":{"1_2":"3B","1_3":"6B","1_5":"3A","1_6":"3A","1_8":"2B","1_9":"2B","2_3":"3A","2_5":"6B","2_7":"2B","2_8":"3B","2_9":"3B","3_1":"2B","3_3":"3B","3_4":"3A","3_5":"6B","4_3":"3A","4_4":"2B","4_8":"3B","4_9":"6B","5_1":"6B","5_2":"6B","5_4":"3A","5_6":"3B","5_9":"2B","6_1":"3B","6_2":"3A","6_3":"2B","6_6":"6B"}},{"s":"LON","e":"Lam On Nei","c":"林安妮","b":{"1_5":"1A","1_6":"1A","1_7":"6A,6B","1_8":"1B","1_9":"1B","2_1":"1C","2_2":"1C","2_8":"6A,6B","2_9":"6A,6B","3_3":"1B","3_4":"1B","3_6":"6A,6B","4_5":"1D","4_6":"1D","5_3":"6A,6B","5_4":"6A,6B","5_5":"2B","5_6":"2B","6_5":"6A,6B"}},{"s":"LSY","e":"Lam Shuk Ying","c":"林淑瑩","b":{"1_3":"3C","1_4":"3C","1_5":"4A","1_7":"4A","2_8":"4A","2_9":"3C","3_3":"4A","3_4":"4A","3_8":"3C","4_3":"3C","4_4":"3C","4_8":"4A","4_9":"4A","5_4":"4A","5_5":"3C","6_4":"3C","6_7":"4A"}},{"s":"LWL","e":"Lam Wai Ling","c":"林偉玲","b":{"1_1":"6A","1_2":"6A","1_5":"3B","1_8":"3B","1_9":"3A","2_2":"3B","2_7":"6A","2_9":"3A","3_1":"6A","3_2":"6A","3_5":"3B","3_6":"3B","3_7":"3A","3_8":"3A","4_1":"3A","4_2":"3A","4_5":"6A","4_9":"3B","5_2":"6A","5_3":"3B","5_4":"3B","5_6":"3A","5_7":"3A","6_1":"3A","6_6":"3B","6_7":"6A"}},{"s":"LWM","e":"Lam Wai Man","c":"林偉文","b":{"1_1":"1C","1_2":"1C","1_4":"2D","1_6":"2C","1_8":"1A","1_9":"1C","2_4":"2C","2_5":"2D","2_6":"2D","2_8":"1C","3_7":"1C","3_8":"1C","3_9":"2D","4_2":"1A","4_4":"2C","4_5":"2D","4_9":"2A,2B,2C,2D","5_1":"2C","5_2":"2C","5_3":"1C","5_4":"1C","6_5":"2D","6_6":"1C","6_7":"2C"}},{"s":"LNM","e":"Lau Nga Man","c":"劉雅雯","b":{"1_2":"6D","1_3":"1A","1_4":"1A","1_5":"4D","1_8":"6B","2_7":"4D","2_8":"1A","2_9":"1A","3_2":"4D","3_5":"5D","3_6":"4D","3_7":"1A","4_1":"1A","4_2":"6C","4_4":"5C","4_5":"4C","4_6":"6A","4_9":"4D","5_3":"4D","5_4":"4D","5_7":"1A","6_3":"5A","6_4":"1A","6_5":"4D","6_6":"4D","6_7":"5B"}},{"s":"LWK1","e":"Lau Wing Kwan","c":"劉永坤","b":{"1_5":"3C","1_6":"3D","1_7":"6A,6B","1_8":"3A","2_1":"3B","2_5":"5A,5B","2_6":"5A,5B","2_7":"4A,4B","2_8":"6A,6B","2_9":"6A,6B","3_3":"3A","3_6":"6A,6B","3_7":"5A,5B","3_8":"4A,4B","3_9":"4A,4B","4_3":"4A,4B","4_4":"4A,4B","4_7":"3D","4_8":"5A,5B","4_9":"5A,5B","5_1":"3B","5_3":"6A,6B","5_4":"6A,6B","5_6":"5A,5B","5_7":"4A,4B","5_8":"3C","6_4":"5A,5B","6_5":"6A,6B","6_6":"4A,4B"}},{"s":"LPL","e":"Leung Pui Ling","c":"梁佩玲","b":{"1_1":"6C","1_3":"4C","1_4":"4C","1_8":"6C","2_2":"4C","2_5":"6C","2_6":"6C","2_9":"4C","3_4":"6A,6B,6C,6D","3_6":"4C","3_9":"6C","4_7":"6C","4_8":"6C","4_9":"4C","5_3":"4C","5_4":"4C","5_8":"6A,6B,6C,6D","5_9":"6C","6_2":"4C","6_3":"6C","6_5":"6A,6B","6_6":"6C,6D"}},{"s":"LCS","e":"Li Chi Shing","c":"李志誠","b":{"1_1":"2B","1_2":"2B","1_3":"5A,5B,5C,5D","1_4":"5A,5B,5C,5D","1_8":"4A,4B,4C,4D","1_9":"4A,4B,4C,4D","2_1":"2C","2_2":"2C","2_5":"4A,4B,4C,4D","2_6":"4A,4B,4C,4D","2_8":"5A,5B,5C,5D","2_9":"5A,5B,5C,5D","3_5":"4A,4B,4C,4D","3_7":"3D","3_8":"3D","4_1":"4A,4B,4C,4D","4_2":"5A,5B,5C,5D","4_7":"2A","4_8":"2A","4_9":"2A,2B,2C,2D","5_1":"4A,4B,4C,4D","5_5":"5A,5B,5C,5D","6_1":"2D","6_2":"2D","6_5":"5A,5B,5C,5D"}},{"s":"LS","e":"Li Silin","c":"李斯琳","b":{"1_1":"6B","1_2":"6B","1_5":"2A","1_8":"2D","2_1":"6B","2_2":"6B","2_3":"2A","2_4":"2A","2_8":"2D","3_3":"2D","3_4":"2D","3_6":"2A","3_9":"6B","4_1":"6B","4_2":"6B","4_5":"2A","4_6":"2A","4_7":"2D","4_8":"2D","5_3":"2D","5_4":"2A","5_6":"6B","6_3":"6B","6_5":"2A","6_7":"2D"}},{"s":"LCW","e":"Lo Chiu Wing","c":"盧昭榮","b":{"1_1":"4B","1_2":"4B","1_4":"6A","1_8":"6A","1_9":"3B","2_1":"6A","2_2":"6A","2_3":"4B","2_4":"4B","2_6":"3B","3_2":"4B","3_7":"6A","3_9":"3B","4_1":"6A","4_2":"6A","4_3":"3B","4_4":"3B","4_5":"4B","4_8":"4B","5_5":"4B","5_7":"3B","5_8":"3B","5_9":"6A","6_2":"3B","6_3":"6A","6_7":"4B"}},{"s":"LYF","e":"Lui Yu Fong","c":"呂渝方","b":{"1_3":"4A,4D","1_4":"4A,4D","1_7":"5B,5C","1_8":"5B,5C","2_1":"2A,2B","2_2":"2A,2B","2_3":"3C,3D","2_4":"3C,3D","3_3":"4B,4C","3_4":"4B,4C","3_7":"6B,6C","3_8":"6B,6C","4_1":"2C,2D","4_2":"2C,2D","4_7":"6A,6D","4_8":"6A,6D","5_1":"1A,1B","5_2":"1A,1B","5_7":"5A,5D","5_8":"5A,5D","6_1":"1C,1D","6_2":"1C,1D","6_3":"3A,3B","6_4":"3A,3B"}},{"s":"MSM","e":"Mak Shuk Man","c":"麥淑雯","b":{"1_3":"5A,5B,5C,5D","1_4":"5A,5B,5C,5D","1_5":"6A,6B,6C,6D","1_6":"6A,6B,6C,6D","1_8":"4A,4B,4C,4D","1_9":"4A,4B,4C,4D","2_4":"3A","2_5":"4A,4B,4C,4D","2_6":"4A,4B,4C,4D","2_8":"5A,5B,5C,5D","2_9":"5A,5B,5C,5D","3_2":"3B","3_3":"6A,6B,6C,6D","3_5":"4A,4B,4C,4D","4_1":"4A,4B,4C,4D","4_2":"5A,5B,5C,5D","4_3":"6A,6B,6C,6D","4_4":"6A,6B,6C,6D","5_1":"4A,4B,4C,4D","5_3":"3A","5_5":"5A,5B,5C,5D","5_8":"6A,6B,6C,6D","5_9":"3B","6_4":"6A,6B,6C,6D","6_5":"5A,5B,5C,5D"}},{"s":"MSY","e":"Mak Sin Yee","c":"麥倩儀","b":{"1_1":"3D","1_2":"3D","1_3":"6D","1_4":"3A","1_8":"6D","2_2":"3D","2_6":"6D","2_7":"3A","2_8":"4D","2_9":"4D","3_1":"3D","3_2":"3D","3_5":"3A","3_6":"3A","3_7":"6D","4_1":"6D","4_2":"6D","4_3":"3D","4_4":"3A","5_1":"3A","5_2":"3D","5_5":"6D","5_6":"6D","6_3":"6D","6_5":"3A","6_6":"3A","6_7":"3D"}},{"s":"MTH","e":"Mak Tsui Han","c":"麥翠嫻","b":{"1_3":"1C","1_5":"5C","1_6":"5C","1_7":"1B","2_1":"1B","2_3":"1C","2_4":"1C","2_5":"5C","2_6":"5C","3_2":"1B","3_5":"5C","3_6":"5C","3_9":"1C","4_3":"1B","4_4":"1B","4_5":"1C","4_6":"1C","4_9":"5C","5_5":"1C","5_6":"1B","5_8":"5C","6_3":"1C","6_4":"5C","6_5":"1B","6_6":"1B"}},{"s":"NOY","e":"Ng Oi Yan","c":"吳靄茵","b":{"1_1":"4C,4D","1_2":"4C,4D","1_5":"3D","2_1":"4A,4B,4C,4D","2_4":"4C,4D","2_5":"1A","2_6":"1A","2_7":"5A,5B,5C,5D","3_1":"4A,4B,4C,4D","3_3":"3D","3_4":"3C","3_8":"5A,5B,5C,5D","3_9":"5A,5B,5C,5D","4_1":"5A,5B,5C,5D","4_2":"4A,4B,4C,4D","4_7":"4C,4D","4_8":"4C,4D","5_1":"5A,5B,5C,5D","5_2":"5A,5B,5C,5D","5_7":"4C,4D","5_8":"4A,4B,4C,4D","5_9":"4A,4B,4C,4D","6_1":"4C,4D","6_3":"4A,4B,4C,4D","6_4":"4A,4B,4C,4D","6_5":"3C","6_6":"5A,5B,5C,5D"}},{"s":"SWP","e":"Sha Wai Pak","c":"沙偉栢","b":{"1_3":"5A,5B,5C,5D","1_4":"5A,5B,5C,5D","1_8":"3C","2_2":"3A","2_5":"5A,5B","2_6":"5A,5B","2_7":"4A,4B","2_8":"5A,5B,5C,5D","2_9":"5A,5B,5C,5D","3_6":"3D","3_7":"5A,5B","3_8":"4A,4B","3_9":"4A,4B","4_1":"3B","4_2":"5A,5B,5C,5D","4_3":"4A,4B","4_4":"4A,4B","4_8":"5A,5B","4_9":"5A,5B","5_3":"3D","5_4":"3C","5_5":"5A,5B,5C,5D","5_6":"5A,5B","5_7":"4A,4B","5_9":"3A","6_4":"5A,5B","6_5":"5A,5B,5C,5D","6_6":"4A,4B","6_7":"3B"}},{"s":"SCL","e":"Suen Chun Long","c":"孫雋朗","b":{"1_1":"3C","1_2":"3A","1_6":"3B","1_7":"4B","1_9":"2A","2_2":"1B","2_6":"2C","2_7":"1C","2_9":"1D","3_1":"5B","3_2":"5B","3_5":"2A","3_6":"1A","3_8":"2C","3_9":"2C","4_4":"1D","4_5":"5B","4_6":"4A","4_7":"1C","5_4":"5B","5_5":"1B","5_6":"2C","5_8":"3D","5_9":"1A","6_3":"2A","6_4":"2A","6_5":"2B","6_6":"2B"}},{"s":"TWF","e":"Toa Wai Fook","c":"陶偉福","b":{"1_1":"4A","1_2":"4A","1_3":"2C","1_4":"2C","1_7":"4C","1_9":"3D","2_3":"2C","2_5":"3D","2_6":"3D","2_7":"4C","2_8":"4C","2_9":"4A","3_1":"2C","3_2":"4C","3_4":"3D","3_7":"4A","4_3":"2C","4_4":"3D","4_5":"4A","4_6":"4C","5_2":"4A","5_4":"3D","5_5":"4C","5_7":"2C","6_1":"3D","6_2":"2C","6_5":"4A","6_6":"4C"}},{"s":"TMF","e":"Tsao Man Fai","c":"曹文翬","b":{"1_3":"4B","1_4":"4B","1_5":"5D","1_6":"5D","2_1":"6C","2_2":"6C","2_3":"4A","2_4":"4A","2_6":"6A","2_8":"3D","3_1":"3B","3_2":"4A","3_8":"6A","3_9":"6A","4_1":"6C","4_2":"3C","4_7":"4B","4_9":"5D","5_1":"6A","5_2":"4B","5_3":"4A","5_6":"6C","5_8":"3A","6_1":"5D"}},{"s":"TYL","e":"Tsoi Yiu Lam","c":"蔡堯琳","b":{"1_3":"4B","1_4":"4B","1_5":"2C","1_6":"2A","1_7":"2C","2_1":"3D","2_2":"3C","2_5":"2A","2_6":"2A","2_9":"2C","3_1":"2D","3_3":"2A","3_5":"2C","3_6":"2C","3_8":"2A","3_9":"2B","4_1":"2A","4_2":"2A","4_7":"2C","4_8":"2C","5_1":"3D","5_3":"2C","5_4":"2B","5_7":"2A","5_8":"2D","5_9":"3C","6_6":"2C","6_7":"2A"}},{"s":"WKT","e":"Wong Kwok Tai","c":"黃國大","b":{"1_1":"2A","1_7":"5A","1_8":"5A","2_1":"6D","2_2":"6D","2_7":"6B","2_8":"4D","2_9":"4D","3_2":"2B","3_4":"2C","3_5":"5A","3_7":"4C","3_8":"4C","3_9":"4D","4_3":"2D","4_4":"5A","4_5":"6D","4_6":"4D","4_7":"6B","4_8":"6B","5_3":"2A","5_5":"6B","5_6":"4C","5_8":"2B","5_9":"6D","6_3":"2D","6_5":"2C","6_7":"4C"}},{"s":"WMH","e":"Wong Man Han","c":"王敏嫻","b":{"2_1":"4A,4B,4C,4D","3_1":"4A,4B,4C,4D","4_2":"4A,4B,4C,4D","5_8":"4A,4B,4C,4D","5_9":"4A,4B,4C,4D","6_3":"4A,4B,4C,4D","6_4":"4A,4B,4C,4D"}},{"s":"WSF","e":"Wong Shing Fung","c":"黃丞鋒","b":{"1_3":"5A,5B,5C,5D","1_4":"5A,5B,5C,5D","1_5":"6A,6B,6C,6D","1_6":"6A,6B,6C,6D","1_8":"4A,4B,4C,4D","1_9":"4A,4B,4C,4D","2_3":"4A","2_4":"4A","2_5":"4A,4B,4C,4D","2_6":"4A,4B,4C,4D","2_8":"5A,5B,5C,5D","2_9":"5A,5B,5C,5D","3_3":"6A,6B,6C,6D","3_5":"4A,4B,4C,4D","4_1":"4A,4B,4C,4D","4_2":"5A,5B,5C,5D","4_3":"6A,6B,6C,6D","4_4":"6A,6B,6C,6D","4_5":"3B","5_1":"4A,4B,4C,4D","5_2":"3C","5_5":"5A,5B,5C,5D","5_8":"6A,6B,6C,6D","6_4":"6A,6B,6C,6D","6_5":"5A,5B,5C,5D","6_6":"3D","6_7":"3A"}},{"s":"WSY","e":"Wong Suk Yin","c":"王淑賢","b":{"1_5":"5B","1_6":"5B","1_7":"1C","1_8":"1D","1_9":"1D","2_1":"1D","2_2":"1D","2_3":"5B","2_5":"1C","2_6":"1C","3_1":"1C","3_2":"1D","3_3":"5B","4_1":"1C","4_2":"1C","4_6":"5B","4_9":"1D","5_1":"1D","5_2":"1C","5_8":"5B","5_9":"5B","6_1":"5B","6_3":"1D","6_4":"1C"}},{"s":"YHM","e":"Yao Hing Man","c":"姚慶萬","b":{"1_2":"3C","1_4":"6B","1_9":"6A,6B,6C,6D","2_3":"6A,6B,6C,6D","2_4":"6A,6B,6C,6D","2_6":"6B","2_7":"5A,5B,5C,5D","2_8":"3A","2_9":"3D","3_1":"6B","3_2":"6B","3_4":"6A,6B,6C,6D","3_8":"5A,5B,5C,5D","3_9":"5A,5B,5C,5D","4_1":"5A,5B,5C,5D","4_5":"6B","4_6":"6B","4_7":"3B","5_1":"5A,5B,5C,5D","5_2":"5A,5B,5C,5D","5_7":"6A,6B,6C,6D","5_9":"6B","6_1":"6A,6B,6C,6D","6_2":"6A,6B,6C,6D","6_6":"5A,5B,5C,5D","6_7":"6B"}},{"s":"YKM","e":"Yip Kin Man","c":"葉健文","b":{"1_3":"1B","1_5":"6A,6B,6C,6D","1_6":"6A,6B,6C,6D","1_7":"6A,6B","1_8":"4A,4B,4C,4D","1_9":"4A,4B,4C,4D","2_5":"4A,4B,4C,4D","2_6":"4A,4B,4C,4D","2_8":"6A,6B","2_9":"6A,6B","3_2":"1C","3_3":"6A,6B,6C,6D","3_5":"4A,4B,4C,4D","3_6":"6A,6B","3_7":"1D","3_9":"1A","4_1":"4A,4B,4C,4D","4_3":"6A,6B,6C,6D","4_4":"6A,6B,6C,6D","4_5":"1B","5_1":"4A,4B,4C,4D","5_2":"1D","5_3":"6A,6B","5_4":"6A,6B","5_6":"1C","5_8":"6A,6B,6C,6D","6_2":"1A","6_4":"6A,6B,6C,6D","6_5":"6A,6B"}},{"s":"YSP","e":"Yu Siu Ping","c":"余小冰","b":{"1_3":"6C","1_4":"6C","1_5":"4C","1_6":"4C","1_9":"3C","2_3":"4C","2_5":"3C","2_6":"3C","2_7":"3B","2_8":"6C","3_1":"3C","3_6":"6C","3_7":"3C","3_9":"4C","4_3":"4C","4_4":"4C","4_5":"6C","4_6":"6C","4_7":"3C","4_8":"3C","5_1":"3C","5_2":"4C","5_5":"6C","5_7":"3C","6_5":"4C","6_6":"3C","6_7":"6C"}}];
 
-// SGDS Teacher List
-const sgdsSet = new Set(["CTK", "CMB", "MSM", "CHC", "SWP", "KCH", "FPY", "CLH", "LSY", "TWF", "YSP", "LCW", "HYL", "CLI"]);
+// Student Guidance and Discipline Services teachers
+const SGDS_TEACHERS = ['CTK','CMB','MSM','CHC','SWP','KCH','FPY','CLH','LSY','TWF','YSP','LCW','HYL','CLI'];
 
-// Schedule Database
-const scheduleData = {"BSD": {"1": [3, 5, 7], "2": [1, 2, 4, 8], "3": [1, 2, 3, 4], "4": [2, 3, 5, 6, 8, 9], "5": [3, 6], "6": [1, 2, 3, 5]}, "CHC": {"1": [2, 7, 9], "2": [1, 2, 3, 4, 9], "3": [1, 2, 3, 4, 5], "4": [3, 5, 6, 7, 9], "5": [1, 2, 4, 5], "6": [2, 3, 5]}, "CKY": {"1": [3, 4, 7, 9], "2": [1, 3, 4, 7], "3": [1, 2, 4, 8, 9], "4": [1, 2, 7], "5": [1, 2, 6, 7, 8, 9], "6": [1, 2, 3, 4, 6]}, "CKK1": {"1": [3, 7, 9], "2": [1, 2, 3, 4, 5, 7], "3": [1, 2, 4, 7], "4": [5, 6, 8, 9], "5": [3, 4, 5, 7, 9], "6": [1, 2, 3, 6]}, "CKK": {"1": [1, 3, 6], "2": [4, 5, 7, 8], "3": [3, 4, 5, 8, 9], "4": [1, 3, 4, 9], "5": [1, 2, 3, 5, 6, 7], "6": [2, 3, 6]}, "CLH": {"1": [2, 3, 4, 5, 6, 8], "2": [3, 5, 6, 9], "3": [3, 4, 5, 6], "4": [3, 4, 5, 6, 9], "5": [1, 3, 4, 8], "6": [1, 2, 4, 7]}, "CLI": {"1": [7, 8, 9], "2": [1, 5, 6, 7], "3": [1, 3, 4, 5, 8, 9], "4": [1, 2, 3, 5, 9], "5": [1, 3, 4, 5, 8, 9], "6": [1, 3, 4, 5]}, "COY": {"1": [3, 5, 6, 7, 9], "2": [1, 2, 7, 8], "3": [2, 3, 4, 6, 7], "4": [1, 3, 5, 6], "5": [3, 4, 5, 6], "6": [1, 5, 7]}, "CSM": {"1": [1, 4, 7], "2": [1, 3, 5, 7], "3": [4, 5, 8, 9], "4": [1, 2, 4, 9], "5": [1, 2, 5, 7, 9], "6": [2, 5, 6]}, "CTM": {"1": [1, 2, 3, 4], "2": [1, 2, 4, 8, 9], "3": [6, 7], "4": [2, 5, 6, 7, 8, 9], "5": [5, 7, 9], "6": [1, 3, 5, 7]}, "CWY": {"1": [1, 6, 7, 8], "2": [2, 7, 8, 9], "3": [5, 6, 8, 9], "4": [2, 5, 6, 7], "5": [1, 5, 6, 9], "6": [1, 2, 3, 4, 5]}, "CYS": {"1": [4, 7], "2": [3, 4, 5, 7], "3": [5, 6, 9], "4": [3, 4, 9], "5": [2, 5, 7, 8, 9], "6": [1, 2, 3, 4, 6, 7]}, "CYW": {"1": [1, 2, 5], "2": [1, 2, 4, 7], "3": [2, 7, 8], "4": [6, 7, 8], "5": [6, 9], "6": [6, 7]}, "CYC": {"1": [2, 4, 5, 6, 7], "2": [3, 4, 5], "3": [2, 7], "4": [3, 4], "5": [6, 8], "6": [3, 4]}, "CCW": {"1": [1, 2, 5, 6, 8], "2": [4, 5, 6], "3": [2, 3, 4, 5, 7, 8], "4": [3, 5, 6, 7, 8], "5": [2, 4, 5, 7, 8], "6": [1, 4]}, "CHN": {"1": [2, 6, 7, 9], "2": [1, 2, 3, 8], "3": [3, 4, 5, 6], "4": [3, 4, 7], "5": [3, 5, 6, 7, 9], "6": [3, 7]}, "CMB": {"1": [3, 4, 7, 8], "2": [1, 2, 3, 4], "3": [3, 4, 7, 8], "4": [1, 2, 7, 8], "5": [1, 2, 7, 8], "6": [1, 2, 3, 4]}, "CPH": {"1": [1, 2, 3, 4, 6], "2": [2, 3, 4, 6, 8, 9], "3": [1, 5, 6, 7], "4": [3, 6, 7, 8, 9], "5": [1, 3, 4, 6], "6": [1, 2, 6, 7]}, "CKC": {"1": [1, 5, 6, 7, 8, 9], "2": [5, 6, 7], "3": [1, 2, 3, 5, 7, 9], "4": [1, 3, 4, 6, 9], "5": [1, 2, 3, 4, 8], "6": [2, 4, 6]}, "CTK": {"1": [9], "2": [3], "3": [1], "4": [5, 6], "5": [9], "6": [2]}, "CYW1": {"1": [5, 6, 9], "2": [3, 4, 7, 8, 9], "3": [3, 4, 5, 6, 7], "4": [3, 7, 8, 9], "5": [1, 3, 4, 7, 8], "6": [2, 4, 5, 6, 7]}, "FPY": {"1": [1, 2, 4, 5, 6], "2": [4, 5, 6, 8, 9], "3": [3, 6, 8, 9], "4": [6, 7, 8, 9], "5": [3, 4, 6, 9], "6": [1, 3, 5]}, "HYL": {"1": [1, 2, 3, 4], "2": [3, 4, 5, 6, 7], "3": [1, 2, 7, 8, 9], "4": [1, 2, 3, 4, 8, 9], "5": [1, 2, 6, 7, 8, 9], "6": [1, 2, 4, 6]}, "HCM": {"1": [1, 2, 5, 7], "2": [3, 9], "3": [1, 4, 5, 6, 8, 9], "4": [1, 2, 5, 6, 8, 9], "5": [2, 4, 5, 6, 7, 8], "6": [1, 4]}, "HNS": {"1": [1, 2, 5, 6, 7, 9], "2": [1, 2, 5, 7, 8], "3": [1, 2, 3, 8, 9], "4": [5, 6, 8, 9], "5": [1, 6, 7, 9], "6": [7]}, "KCH": {"1": [1, 2, 6, 9], "2": [2, 7, 9], "3": [1, 2, 5, 6, 7, 8], "4": [4, 5, 7, 8], "5": [2, 3, 4, 7, 8, 9], "6": [2, 4]}, "KLH": {"1": [1, 3, 4, 5, 6], "2": [3, 4, 5, 6, 7], "3": [1, 2, 3, 4], "4": [1, 2, 3, 4], "5": [5, 6, 7], "6": [3, 4, 7]}, "KY": {"1": [3, 4, 5, 6, 9], "2": [1, 3, 4, 7, 8, 9], "3": [3, 4, 8, 9], "4": [1, 2, 3, 4, 9], "5": [1, 2, 5, 7, 8], "6": [1, 2, 4, 5, 6]}, "KPP": {"1": [1, 3, 4, 8, 9], "2": [5, 6], "3": [1, 6, 9], "4": [1, 2, 4, 6, 8, 9], "5": [3, 6, 9], "6": [4, 6]}, "LKY": {"1": [3, 8, 9], "2": [1, 3, 4], "3": [1, 2, 3, 4, 7, 8], "4": [2, 7], "5": [2, 6, 7, 8, 9], "6": [1, 2, 3, 4, 7]}, "LMP": {"1": [2, 3, 5, 6, 8, 9], "2": [3, 5, 7, 8, 9], "3": [1, 3, 4, 5], "4": [3, 4, 8, 9], "5": [1, 2, 4, 6, 9], "6": [1, 2, 3, 6]}, "LON": {"1": [5, 6, 7, 8, 9], "2": [1, 2, 8, 9], "3": [3, 4, 6], "4": [5, 6], "5": [3, 4, 5, 6], "6": [5]}, "LSY": {"1": [3, 4, 5, 7], "2": [8, 9], "3": [3, 4, 8], "4": [3, 4, 8, 9], "5": [4, 5], "6": [4, 7]}, "LWL": {"1": [1, 2, 5, 8, 9], "2": [2, 7, 9], "3": [1, 2, 5, 6, 7, 8], "4": [1, 2, 5, 9], "5": [2, 3, 4, 6, 7], "6": [1, 6, 7]}, "LWM": {"1": [1, 2, 4, 6, 8, 9], "2": [4, 5, 6, 8], "3": [7, 8, 9], "4": [2, 4, 5, 9], "5": [1, 2, 3, 4], "6": [5, 6, 7]}, "LNM": {"1": [2, 3, 4, 5, 8], "2": [7, 8, 9], "3": [2, 5, 6, 7], "4": [1, 2, 4, 5, 6, 9], "5": [3, 4, 7], "6": [3, 4, 5, 6, 7]}, "LWK1": {"1": [5, 6, 7, 8], "2": [1, 5, 6, 7, 8, 9], "3": [3, 6, 7, 8, 9], "4": [3, 4, 7, 8, 9], "5": [1, 3, 4, 6, 7, 8], "6": [4, 5, 6]}, "LPL": {"1": [1, 3, 4, 8], "2": [2, 5, 6, 9], "3": [4, 6, 9], "4": [7, 8, 9], "5": [3, 4, 8, 9], "6": [2, 3, 5, 6]}, "LCS": {"1": [1, 2, 3, 4, 8, 9], "2": [1, 2, 5, 6, 8, 9], "3": [5, 7, 8], "4": [1, 2, 7, 8, 9], "5": [1, 5], "6": [1, 2, 5]}, "LS": {"1": [1, 2, 5, 8], "2": [1, 2, 3, 4, 8], "3": [3, 4, 6, 9], "4": [1, 2, 5, 6, 7, 8], "5": [3, 4, 6], "6": [3, 5, 7]}, "LCW": {"1": [1, 2, 4, 8, 9], "2": [1, 2, 3, 4, 6], "3": [2, 7, 9], "4": [1, 2, 3, 4, 5, 8], "5": [5, 7, 8, 9], "6": [2, 3, 7]}, "LYF": {"1": [3, 4, 7, 8], "2": [1, 2, 3, 4], "3": [3, 4, 7, 8], "4": [1, 2, 7, 8], "5": [1, 2, 7, 8], "6": [1, 2, 3, 4]}, "MSM": {"1": [3, 4, 5, 6, 8, 9], "2": [4, 5, 6, 8, 9], "3": [2, 3, 5], "4": [1, 2, 3, 4], "5": [1, 3, 5, 8, 9], "6": [4, 5]}, "MSY": {"1": [1, 2, 3, 4, 8], "2": [2, 6, 7, 8, 9], "3": [1, 2, 5, 6, 7], "4": [1, 2, 3, 4], "5": [1, 2, 5, 6], "6": [3, 5, 6, 7]}, "MTH": {"1": [3, 5, 6, 7], "2": [1, 3, 4, 5, 6], "3": [2, 5, 6, 9], "4": [3, 4, 5, 6, 9], "5": [5, 6, 8], "6": [3, 4, 5, 6]}, "NOY": {"1": [1, 2, 5], "2": [1, 4, 5, 6, 7], "3": [1, 3, 4, 8, 9], "4": [1, 2, 7, 8], "5": [1, 2, 7, 8, 9], "6": [1, 3, 4, 5, 6]}, "SWP": {"1": [3, 4, 8], "2": [2, 5, 6, 7, 8, 9], "3": [6, 7, 8, 9], "4": [1, 2, 3, 4, 8, 9], "5": [3, 4, 5, 6, 7, 9], "6": [4, 5, 6, 7]}, "SCL": {"1": [1, 2, 6, 7, 9], "2": [2, 6, 7, 9], "3": [1, 2, 5, 6, 8, 9], "4": [4, 5, 6, 7], "5": [4, 5, 6, 8, 9], "6": [3, 4, 5, 6]}, "TWF": {"1": [1, 2, 3, 4, 7, 9], "2": [3, 5, 6, 7, 8, 9], "3": [1, 2, 4, 7], "4": [3, 4, 5, 6], "5": [2, 4, 5, 7], "6": [1, 2, 5, 6]}, "TMF": {"1": [3, 4, 5, 6], "2": [1, 2, 3, 4, 6, 8], "3": [1, 2, 8, 9], "4": [1, 2, 7, 9], "5": [1, 2, 3, 6, 8], "6": [1]}, "TYL": {"1": [3, 4, 5, 6, 7], "2": [1, 2, 5, 6, 9], "3": [1, 3, 5, 6, 8, 9], "4": [1, 2, 7, 8], "5": [1, 3, 4, 7, 8, 9], "6": [6, 7]}, "WKT": {"1": [1, 7, 8], "2": [1, 2, 7, 8, 9], "3": [2, 4, 5, 7, 8, 9], "4": [3, 4, 5, 6, 7, 8], "5": [3, 5, 6, 8, 9], "6": [3, 5, 7]}, "WMH": {"1": [], "2": [1], "3": [1], "4": [2], "5": [8, 9], "6": [3, 4]}, "WSF": {"1": [3, 4, 5, 6, 8, 9], "2": [3, 4, 5, 6, 8, 9], "3": [3, 5], "4": [1, 2, 3, 4, 5], "5": [1, 2, 5, 8], "6": [4, 5, 6, 7]}, "WSY": {"1": [5, 6, 7, 8, 9], "2": [1, 2, 3, 5, 6], "3": [1, 2, 3], "4": [1, 2, 6, 9], "5": [1, 2, 8, 9], "6": [1, 3, 4]}, "YHM": {"1": [2, 4, 9], "2": [3, 4, 6, 7, 8, 9], "3": [1, 2, 4, 8, 9], "4": [1, 5, 6, 7], "5": [1, 2, 7, 9], "6": [1, 2, 6, 7]}, "YKM": {"1": [3, 5, 6, 7, 8, 9], "2": [5, 6, 8, 9], "3": [2, 3, 5, 6, 7, 9], "4": [1, 3, 4, 5], "5": [1, 2, 3, 4, 6, 8], "6": [2, 4, 5]}, "YSP": {"1": [3, 4, 5, 6, 9], "2": [3, 5, 6, 7, 8], "3": [1, 6, 7, 9], "4": [3, 4, 5, 6, 7, 8], "5": [1, 2, 5, 7], "6": [5, 6, 7]}};
+// ==================== APP LOGIC ====================
+let selectedTeachers = [];
 
-const teachers = Object.keys(scheduleData);
-
-function getTeacherDisplayName(code) {
-  const info = teacherNames[code];
-  if (!info) return code;
-  return info.chi ? `${code} (${info.eng} / ${info.chi})` : `${code} (${info.eng})`;
+function isFree(teacher, day, period) {
+  return !teacher.b[day + '_' + period];
 }
 
-function renderTeacherChoices() {
-  const container = document.getElementById('teacherBoxes');
-  container.innerHTML = '';
-  teachers.forEach(teacher => {
-    const info = teacherNames[teacher] || { eng: '', chi: '' };
-    const label = document.createElement('label');
-    label.className = 'teacher-label';
-    label.setAttribute('data-teacher', teacher);
-    label.setAttribute('data-fullname', info.eng);
-    label.setAttribute('data-chiname', info.chi);
-    label.innerHTML = `<input type="checkbox" value="${teacher}" onchange="updateTimetable()"> ${getTeacherDisplayName(teacher)}`;
-    container.appendChild(label);
+function getBusyClass(teacher, day, period) {
+  return teacher.b[day + '_' + period] || null;
+}
+
+// ==================== TABS ====================
+document.querySelectorAll('.tab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+    document.querySelectorAll('.tab-content').forEach(function(tc) { tc.classList.remove('active'); });
+    tab.classList.add('active');
+    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+  });
+});
+
+// ==================== TEACHER SEARCH ====================
+var searchInput = document.getElementById('teacherSearch');
+var dropdown = document.getElementById('teacherDropdown');
+var chipsContainer = document.getElementById('selectedChips');
+
+searchInput.addEventListener('focus', showDropdown);
+searchInput.addEventListener('input', showDropdown);
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.teacher-select-wrapper')) {
+    dropdown.classList.remove('show');
+  }
+});
+
+function showDropdown() {
+  var query = searchInput.value.toLowerCase().trim();
+  var filtered = TEACHERS.filter(function(t) {
+    if (selectedTeachers.indexOf(t.s) !== -1) return false;
+    if (!query) return true;
+    return t.s.toLowerCase().indexOf(query) !== -1 ||
+           t.e.toLowerCase().indexOf(query) !== -1 ||
+           t.c.indexOf(query) !== -1;
+  });
+
+  if (filtered.length === 0) {
+    dropdown.innerHTML = '<div class="dropdown-item"><span class="name">No match</span></div>';
+  } else {
+    dropdown.innerHTML = filtered.map(function(t) {
+      return '<div class="dropdown-item" data-short="' + t.s + '">' +
+        '<span class="short">' + t.s + '</span>' +
+        '<span class="name">' + t.e + (t.c ? ' ' + t.c : '') + '</span></div>';
+    }).join('');
+  }
+
+  dropdown.classList.add('show');
+  dropdown.querySelectorAll('.dropdown-item[data-short]').forEach(function(item) {
+    item.addEventListener('click', function() {
+      addTeacher(item.dataset.short);
+    });
   });
 }
 
-function filterTeachers() {
-  const query = document.getElementById('teacherSearch').value.toUpperCase().trim();
-  const labels = document.querySelectorAll('#teacherBoxes .teacher-label');
-  labels.forEach(label => {
-    const code = label.getAttribute('data-teacher').toUpperCase();
-    const name = label.getAttribute('data-fullname').toUpperCase();
-    const chiName = label.getAttribute('data-chiname');
-    label.style.display = (code.includes(query) || name.includes(query) || chiName.includes(query)) ? 'flex' : 'none';
-  });
+function addTeacher(shortName) {
+  if (selectedTeachers.indexOf(shortName) !== -1) return;
+  selectedTeachers.push(shortName);
+  searchInput.value = '';
+  dropdown.classList.remove('show');
+  renderChips();
+  updateCommonFree();
 }
 
-function selectAll(checked) {
-  const checkboxes = document.querySelectorAll('#teacherBoxes input[type="checkbox"]');
-  checkboxes.forEach(cb => cb.checked = checked);
-  updateTimetable();
+function removeTeacher(shortName) {
+  selectedTeachers = selectedTeachers.filter(function(s) { return s !== shortName; });
+  renderChips();
+  updateCommonFree();
 }
 
-function updateTimetable() {
-  const selectedTeachers = Array.from(document.querySelectorAll('#teacherBoxes input[type="checkbox"]:checked')).map(cb => cb.value);
-  const summaryDiv = document.getElementById('statusSummary');
-  
+function renderChips() {
+  chipsContainer.innerHTML = selectedTeachers.map(function(s) {
+    var t = TEACHERS.find(function(x) { return x.s === s; });
+    return '<div class="chip"><span>' + t.s + '</span><span class="remove" onclick="removeTeacher(\'' + t.s + '\')">&times;</span></div>';
+  }).join('');
+}
+
+function updateCommonFree() {
+  var resultsSection = document.getElementById('commonResults');
+  var table = document.getElementById('commonTable');
+
   if (selectedTeachers.length === 0) {
-    summaryDiv.textContent = 'No teachers selected. Select teachers above to find free overlapping slots.';
-  } else {
-    summaryDiv.textContent = `Comparing (${selectedTeachers.length}) teachers: ` + selectedTeachers.map(getTeacherDisplayName).join(', ');
+    resultsSection.style.display = 'none';
+    return;
   }
 
-  const tbody = document.querySelector('#timetableGrid tbody');
-  tbody.innerHTML = '';
-
-  for (let period = 1; period <= 9; period++) {
-    const row = document.createElement('tr');
-    let rowHTML = `<td class="period-header">Period ${period}</td>`;
-
-    for (let day = 1; day <= 6; day++) {
-      if (selectedTeachers.length === 0) {
-        rowHTML += `<td>-</td>`;
-        continue;
-      }
-
-      const isFree = selectedTeachers.every(teacher => {
-        const busyPeriods = scheduleData[teacher][day] || [];
-        return !busyPeriods.includes(period);
-      });
-
-      if (isFree) {
-        rowHTML += `<td class="free-slot">FREE</td>`;
-      } else {
-        rowHTML += `<td class="busy-slot">BUSY</td>`;
-      }
-    }
-    row.innerHTML = rowHTML;
-    tbody.appendChild(row);
-  }
-}
-
-// Searching Engine: Find free teachers for selected Day & Period
-function runTimeslotLookup() {
-  const day = parseInt(document.getElementById('lookupDay').value);
-  const period = parseInt(document.getElementById('lookupPeriod').value);
-
-  const freeNormal = [];
-  const freeSGDS = [];
-
-  teachers.forEach(teacher => {
-    const busyPeriods = scheduleData[teacher][day] || [];
-    if (!busyPeriods.includes(period)) {
-      if (sgdsSet.has(teacher)) {
-        freeSGDS.push(teacher);
-      } else {
-        freeNormal.push(teacher);
-      }
-    }
+  resultsSection.style.display = 'block';
+  var teachers = selectedTeachers.map(function(s) {
+    return TEACHERS.find(function(x) { return x.s === s; });
   });
 
-  document.getElementById('lookupHeader').textContent = `Day ${day} Period ${period} (Free Teachers)`;
-
-  const normalContainer = document.getElementById('normalTeacherList');
-  if (freeNormal.length > 0) {
-    normalContainer.innerHTML = freeNormal.map(t => `<span class="teacher-tag">${getTeacherDisplayName(t)}</span>`).join('');
-  } else {
-    normalContainer.innerHTML = `<span style="font-size:12px; color:#94a3b8;">None</span>`;
+  // Build table: Days as columns, Periods as rows
+  var html = '<thead><tr><th></th>';
+  for (var d = 1; d <= 6; d++) {
+    html += '<th>Day ' + d + '</th>';
   }
+  html += '</tr></thead><tbody>';
 
-  const sgdsContainer = document.getElementById('sgdsTeacherList');
-  if (freeSGDS.length > 0) {
-    sgdsContainer.innerHTML = freeSGDS.map(t => `<span class="teacher-tag sgds">${getTeacherDisplayName(t)}</span>`).join('');
-  } else {
-    sgdsContainer.innerHTML = `<span style="font-size:12px; color:#94a3b8;">None</span>`;
+  for (var p = 1; p <= 9; p++) {
+    html += '<tr><th>P' + p + '</th>';
+    for (var dd = 1; dd <= 6; dd++) {
+      var allFree = teachers.every(function(t) { return isFree(t, dd, p); });
+      if (allFree) {
+        html += '<td class="free">FREE</td>';
+      } else {
+        var details = teachers.map(function(t) {
+          var cls = getBusyClass(t, dd, p);
+          if (cls) {
+            return '<span class="teacher-loc">' + t.s + ': ' + cls + '</span>';
+          }
+          return null;
+        }).filter(function(x) { return x !== null; });
+        html += '<td class="busy">' + details.join('') + '</td>';
+      }
+    }
+    html += '</tr>';
   }
+  html += '</tbody>';
+  table.innerHTML = html;
 }
 
-// Initial setup
-renderTeacherChoices();
-updateTimetable();
-runTimeslotLookup();
+// ==================== SLOT SEARCH ====================
+document.getElementById('searchSlotBtn').addEventListener('click', searchSlot);
+document.getElementById('daySelect').addEventListener('change', searchSlot);
+document.getElementById('periodSelect').addEventListener('change', searchSlot);
+
+function searchSlot() {
+  var day = document.getElementById('daySelect').value;
+  var period = document.getElementById('periodSelect').value;
+  var resultsSection = document.getElementById('slotResults');
+  var content = document.getElementById('slotResultsContent');
+
+  if (!day || !period) {
+    resultsSection.style.display = 'none';
+    return;
+  }
+
+  var d = parseInt(day);
+  var p = parseInt(period);
+
+  var freeTeachers = TEACHERS.filter(function(t) { return isFree(t, d, p); });
+  var normalFree = freeTeachers.filter(function(t) { return SGDS_TEACHERS.indexOf(t.s) === -1; });
+  var sgdsFree = freeTeachers.filter(function(t) { return SGDS_TEACHERS.indexOf(t.s) !== -1; });
+
+  resultsSection.style.display = 'block';
+
+  var html = '<div class="results-header">Day ' + day + ' Period ' + period + ' \u2014 Free Teachers (' + freeTeachers.length + '/' + TEACHERS.length + ')</div>';
+
+  html += '<div class="results-category">';
+  html += '<div class="results-category-label">Normal Teachers (' + normalFree.length + ')</div>';
+  html += '<div class="results-teachers">';
+  if (normalFree.length > 0) {
+    html += normalFree.map(function(t) {
+      return '<span class="teacher-tag normal">' + t.s + ' (' + t.e + (t.c ? ' ' + t.c : '') + ')</span>';
+    }).join('');
+  } else {
+    html += '<span class="no-results">None</span>';
+  }
+  html += '</div></div>';
+
+  html += '<div class="results-category">';
+  html += '<div class="results-category-label">Student Guidance &amp; Discipline Services (' + sgdsFree.length + ')</div>';
+  html += '<div class="results-teachers">';
+  if (sgdsFree.length > 0) {
+    html += sgdsFree.map(function(t) {
+      return '<span class="teacher-tag sgds">' + t.s + ' (' + t.e + (t.c ? ' ' + t.c : '') + ')</span>';
+    }).join('');
+  } else {
+    html += '<span class="no-results">None</span>';
+  }
+  html += '</div></div>';
+
+  content.innerHTML = html;
+}
 </script>
 </body>
 </html>
