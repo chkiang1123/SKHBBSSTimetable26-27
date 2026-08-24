@@ -1,195 +1,152 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Teacher Free Period Finder</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg-primary: #0d1117;
   --bg-secondary: #161b22;
   --bg-tertiary: #21262d;
-  --bg-card: #161b22;
+  --bg-card: #1c2128;
+  --border: #30363d;
+  --border-light: #3d444d;
   --text-primary: #e6edf3;
   --text-secondary: #8b949e;
-  --text-muted: #484f58;
+  --text-muted: #6e7681;
   --accent: #58a6ff;
-  --accent-dim: #388bfd;
-  --accent-glow: rgba(88, 166, 255, 0.12);
+  --accent-dim: #1f3a5f;
   --green: #3fb950;
-  --green-dim: rgba(63, 185, 80, 0.15);
-  --border: #30363d;
-  --danger: #f85149;
-  --warning: #d29922;
-  --warning-glow: rgba(210, 153, 34, 0.12);
-  --free-cell: rgba(63, 185, 80, 0.12);
-  --busy-cell: rgba(248, 81, 73, 0.06);
-  --highlight: rgba(63, 185, 80, 0.22);
-  --shadow: 0 3px 12px rgba(0,0,0,0.3);
+  --green-dim: #1a3a2a;
+  --red: #f85149;
+  --orange: #d29922;
+  --purple: #bc8cff;
+  --chip-bg: #1f3a5f;
+  --chip-border: #58a6ff;
+  --free-bg: #1a3a2a;
+  --free-border: #3fb950;
+  --busy-bg: #2d1b1b;
+  --busy-border: #f85149;
+  --break-bg: #1a1a2e;
+  --break-border: #6e40c9;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-sans: 'Noto Sans TC', sans-serif;
   --radius: 8px;
+  --radius-sm: 4px;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  font-family: 'Noto Sans TC', -apple-system, sans-serif;
+  font-family: var(--font-sans);
   background: var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
-  padding: 16px;
+  line-height: 1.5;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
-}
-
-header {
-  margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--border);
+  padding: 16px;
 }
 
 h1 {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 1.4rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--accent);
   margin-bottom: 4px;
+  letter-spacing: -0.5px;
 }
-
-h1 span { color: var(--accent); }
 
 .subtitle {
+  font-size: 0.85rem;
   color: var(--text-muted);
-  font-size: 0.8rem;
-  font-family: 'JetBrains Mono', monospace;
-}
-
-.section {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px;
   margin-bottom: 16px;
 }
 
-.section-title {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  margin-bottom: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-}
-
-/* Tabs */
 .tabs {
   display: flex;
   gap: 2px;
-  margin-bottom: 16px;
-  background: var(--bg-secondary);
-  padding: 3px;
+  background: var(--bg-tertiary);
   border-radius: var(--radius);
-  border: 1px solid var(--border);
+  padding: 3px;
+  margin-bottom: 16px;
 }
 
 .tab {
   flex: 1;
-  padding: 9px 12px;
-  text-align: center;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.78rem;
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
   font-weight: 500;
-  color: var(--text-muted);
-  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.15s;
-  white-space: nowrap;
+  border-radius: 6px;
+  transition: all 0.2s;
 }
 
 .tab.active {
-  background: var(--accent);
-  color: #fff;
+  background: var(--accent-dim);
+  color: var(--accent);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
 .tab:hover:not(.active) {
   color: var(--text-primary);
-  background: var(--bg-tertiary);
+  background: rgba(255,255,255,0.04);
 }
 
-.tab-content { display: none; }
-.tab-content.active { display: block; }
+.panel { display: none; }
+.panel.active { display: block; }
 
-/* Teacher Search */
-.teacher-select-wrapper { position: relative; }
+.search-box {
+  position: relative;
+  margin-bottom: 12px;
+}
 
-.teacher-search {
+.search-box input {
   width: 100%;
-  padding: 10px 14px;
-  font-size: 16px;
-  background: var(--bg-tertiary);
+  padding: 12px 16px 12px 40px;
+  background: var(--bg-secondary);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--radius);
   color: var(--text-primary);
-  font-family: 'Noto Sans TC', sans-serif;
+  font-family: var(--font-mono);
+  font-size: 16px;
   outline: none;
-  transition: border-color 0.15s;
+  transition: border-color 0.2s;
 }
 
-.teacher-search:focus { border-color: var(--accent); }
-.teacher-search::placeholder { color: var(--text-muted); }
-
-.teacher-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 10px;
-  min-height: 28px;
+.search-box input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(88,166,255,0.1);
 }
 
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: var(--accent-glow);
-  border: 1px solid var(--accent-dim);
-  color: var(--accent);
-  padding: 3px 10px;
-  border-radius: 16px;
-  font-size: 0.78rem;
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 500;
-  animation: chipIn 0.15s ease;
+.search-box::before {
+  content: '\1F50D';
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  opacity: 0.6;
 }
-
-@keyframes chipIn {
-  from { transform: scale(0.85); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-.chip .remove {
-  cursor: pointer;
-  font-size: 0.95rem;
-  line-height: 1;
-  opacity: 0.7;
-  transition: opacity 0.15s;
-}
-
-.chip .remove:hover { opacity: 1; color: var(--danger); }
 
 .dropdown {
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
-  background: var(--bg-tertiary);
+  background: var(--bg-secondary);
   border: 1px solid var(--border);
-  border-radius: 6px;
-  margin-top: 4px;
-  max-height: 220px;
+  border-radius: var(--radius);
+  max-height: 240px;
   overflow-y: auto;
   z-index: 100;
   display: none;
@@ -199,70 +156,97 @@ h1 span { color: var(--accent); }
 .dropdown.show { display: block; }
 
 .dropdown-item {
-  padding: 8px 14px;
+  padding: 10px 16px;
   cursor: pointer;
-  font-size: 0.82rem;
-  transition: background 0.1s;
-  border-bottom: 1px solid rgba(48, 54, 61, 0.5);
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
 }
 
 .dropdown-item:last-child { border-bottom: none; }
-.dropdown-item:hover { background: var(--accent-glow); }
+.dropdown-item:hover { background: var(--bg-tertiary); }
 
 .dropdown-item .short {
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-weight: 600;
   color: var(--accent);
-  margin-right: 6px;
+  margin-right: 8px;
 }
 
-.dropdown-item .name { color: var(--text-secondary); }
+.dropdown-item .name {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
 
-/* Slot Search */
-.slot-search {
+.chips {
   display: flex;
-  gap: 10px;
-  align-items: center;
   flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+  min-height: 36px;
 }
 
-.slot-search select {
-  padding: 9px 12px;
-  font-size: 16px;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text-primary);
-  font-family: 'JetBrains Mono', monospace;
-  outline: none;
-  cursor: pointer;
-}
-
-.slot-search select:focus { border-color: var(--accent); }
-
-.btn {
-  padding: 9px 16px;
-  font-size: 0.82rem;
-  font-family: 'JetBrains Mono', monospace;
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--chip-bg);
+  border: 1px solid var(--chip-border);
+  border-radius: 20px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
   font-weight: 500;
-  border: none;
-  border-radius: 6px;
+  color: var(--accent);
+  animation: chipIn 0.2s ease;
+}
+
+@keyframes chipIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.chip .remove {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50%;
   cursor: pointer;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
   transition: all 0.15s;
 }
 
-.btn-primary {
-  background: var(--accent);
-  color: #fff;
+.chip .remove:hover {
+  background: var(--red);
+  color: white;
 }
 
-.btn-primary:hover { background: var(--accent-dim); }
+.result-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+}
 
-/* Timetable */
-.timetable-wrapper {
+.result-card h3 {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--green);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.timetable-wrap {
   overflow-x: auto;
-  margin-top: 14px;
-  border-radius: 6px;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--radius);
   border: 1px solid var(--border);
 }
 
@@ -270,431 +254,423 @@ h1 span { color: var(--accent); }
   width: 100%;
   border-collapse: collapse;
   font-size: 0.75rem;
-  min-width: 520px;
+  min-width: 600px;
+}
+
+.timetable th, .timetable td {
+  padding: 8px 6px;
+  text-align: center;
+  border: 1px solid var(--border);
+  font-family: var(--font-mono);
 }
 
 .timetable th {
   background: var(--bg-tertiary);
-  padding: 8px 6px;
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 500;
-  font-size: 0.72rem;
   color: var(--text-secondary);
-  border: 1px solid var(--border);
-  white-space: nowrap;
-}
-
-.timetable td {
-  padding: 6px 5px;
-  border: 1px solid var(--border);
-  text-align: center;
-  vertical-align: middle;
+  font-weight: 600;
   font-size: 0.7rem;
-  line-height: 1.3;
-  min-width: 70px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
-.timetable td.free {
-  background: var(--free-cell);
+.timetable .period-col {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-weight: 600;
+  width: 60px;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
+.timetable .free-cell {
+  background: var(--free-bg);
   color: var(--green);
-  font-weight: 700;
-  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
 }
 
-.timetable td.busy {
-  background: var(--busy-cell);
-  color: var(--text-muted);
-  font-family: 'JetBrains Mono', monospace;
+.timetable .busy-cell {
+  background: var(--busy-bg);
+  color: var(--text-secondary);
   font-size: 0.68rem;
 }
 
-.timetable td.busy .teacher-loc {
-  display: block;
-  color: var(--danger);
-  opacity: 0.8;
-  font-size: 0.65rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 120px;
-  margin: 0 auto;
+.timetable .break-row td {
+  background: var(--break-bg);
+  color: var(--purple);
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  border-color: var(--break-border);
+  padding: 5px 6px;
 }
 
-.timetable tr th:first-child {
-  position: sticky;
-  left: 0;
-  z-index: 2;
-  background: var(--bg-tertiary);
+.slot-search {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
 }
 
-/* Results */
-.results {
-  margin-top: 14px;
-  animation: fadeIn 0.2s ease;
+.slot-search select {
+  padding: 10px 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  outline: none;
+  cursor: pointer;
+  flex: 1;
+  min-width: 120px;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
+.slot-search select:focus {
+  border-color: var(--accent);
 }
 
-.results-header {
-  font-family: 'JetBrains Mono', monospace;
+.slot-search button {
+  padding: 10px 20px;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius);
+  color: #0d1117;
+  font-family: var(--font-mono);
+  font-weight: 600;
   font-size: 0.85rem;
-  color: var(--green);
-  margin-bottom: 14px;
-  font-weight: 700;
-  padding-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.slot-search button:hover {
+  background: #79c0ff;
+  transform: translateY(-1px);
+}
+
+.free-list {
+  margin-top: 12px;
+}
+
+.free-list-section {
+  margin-bottom: 16px;
+}
+
+.free-list-section h4 {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  padding-bottom: 4px;
   border-bottom: 1px solid var(--border);
 }
 
-.results-category { margin-bottom: 14px; }
-
-.results-category-label {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 8px;
-  font-family: 'JetBrains Mono', monospace;
+.free-list-section h4.sgds-header {
+  color: var(--orange);
+  border-color: var(--orange);
 }
 
-.results-teachers {
+.free-teachers {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
 
-.teacher-tag {
-  display: inline-block;
-  padding: 4px 9px;
-  border-radius: 5px;
-  font-size: 0.75rem;
-  font-family: 'JetBrains Mono', monospace;
-}
-
-.teacher-tag.normal {
-  background: var(--green-dim);
-  border: 1px solid rgba(63, 185, 80, 0.3);
+.free-tag {
+  padding: 4px 10px;
+  background: var(--free-bg);
+  border: 1px solid var(--free-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
   color: var(--green);
+  font-weight: 500;
 }
 
-.teacher-tag.sgds {
-  background: var(--warning-glow);
-  border: 1px solid rgba(210, 153, 34, 0.3);
-  color: var(--warning);
+.free-tag.sgds {
+  background: rgba(210,153,34,0.1);
+  border-color: var(--orange);
+  color: var(--orange);
 }
 
-.no-results {
+.empty-state {
+  text-align: center;
+  padding: 32px 16px;
   color: var(--text-muted);
-  font-style: italic;
-  font-size: 0.82rem;
+  font-size: 0.9rem;
 }
 
-.legend {
-  display: flex;
-  gap: 16px;
-  margin-top: 10px;
-  font-size: 0.72rem;
-  font-family: 'JetBrains Mono', monospace;
-  color: var(--text-secondary);
-  flex-wrap: wrap;
+.count-badge {
+  background: var(--accent-dim);
+  color: var(--accent);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
 }
 
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.legend-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 3px;
-}
-
-.legend-dot.free-dot { background: var(--green); opacity: 0.7; }
-.legend-dot.busy-dot { background: var(--danger); opacity: 0.4; }
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--bg-secondary); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
-
-/* Responsive */
 @media (max-width: 600px) {
-  body { padding: 10px; }
-  h1 { font-size: 1.2rem; }
-  .section { padding: 12px; }
-  .slot-search { flex-direction: column; align-items: stretch; }
-  .slot-search select { width: 100%; }
-  .btn { width: 100%; text-align: center; }
-  .tabs { overflow-x: auto; }
-  .tab { font-size: 0.72rem; padding: 8px 10px; }
+  .container { padding: 12px; }
+  h1 { font-size: 1.1rem; }
+  .timetable { font-size: 0.68rem; }
+  .timetable th, .timetable td { padding: 6px 4px; }
+  .slot-search { flex-direction: column; }
+  .slot-search select, .slot-search button { width: 100%; }
 }
 </style>
 </head>
 <body>
 <div class="container">
-  <header>
-    <h1><span>//</span> Teacher Free Period Finder</h1>
-    <p class="subtitle">26-27 Timetable &middot; 6 Days &middot; 9 Periods &middot; 58 Teachers</p>
-  </header>
+  <h1>Teacher Free Period Finder</h1>
+  <p class="subtitle">58 teachers · 6 days · 9 periods</p>
 
   <div class="tabs">
-    <div class="tab active" data-tab="common">Common Free Periods</div>
-    <div class="tab" data-tab="slot">Search by Time Slot</div>
+    <button class="tab active" onclick="switchTab(0)">Compare Teachers</button>
+    <button class="tab" onclick="switchTab(1)">Search by Slot</button>
   </div>
 
-  <!-- Tab 1: Common Free Periods -->
-  <div class="tab-content active" id="tab-common">
-    <div class="section">
-      <div class="section-title">Select Teachers</div>
-      <div class="teacher-select-wrapper">
-        <input type="text" class="teacher-search" id="teacherSearch" placeholder="Search by short name, English name, or Chinese name..." autocomplete="off">
-        <div class="dropdown" id="teacherDropdown"></div>
-      </div>
-      <div class="teacher-chips" id="selectedChips"></div>
+  <div class="panel active" id="panel0">
+    <div class="search-box">
+      <input type="text" id="teacherSearch" placeholder="Search teacher (e.g. KCH, Chan)..." oninput="showDropdown()" onfocus="showDropdown()">
+      <div class="dropdown" id="dropdown"></div>
     </div>
-
-    <div class="section" id="commonResults" style="display:none;">
-      <div class="section-title">Timetable Comparison</div>
-      <div class="legend">
-        <div class="legend-item"><div class="legend-dot free-dot"></div> All Free</div>
-        <div class="legend-item"><div class="legend-dot busy-dot"></div> Busy (class shown)</div>
-      </div>
-      <div class="timetable-wrapper">
-        <table class="timetable" id="commonTable"></table>
-      </div>
-    </div>
+    <div class="chips" id="chips"></div>
+    <div id="compareResult"></div>
   </div>
 
-  <!-- Tab 2: Search by Time Slot -->
-  <div class="tab-content" id="tab-slot">
-    <div class="section">
-      <div class="section-title">Select Time Slot</div>
-      <div class="slot-search">
-        <select id="daySelect">
-          <option value="">Day</option>
-          <option value="1">Day 1</option>
-          <option value="2">Day 2</option>
-          <option value="3">Day 3</option>
-          <option value="4">Day 4</option>
-          <option value="5">Day 5</option>
-          <option value="6">Day 6</option>
-        </select>
-        <select id="periodSelect">
-          <option value="">Period</option>
-          <option value="1">Period 1</option>
-          <option value="2">Period 2</option>
-          <option value="3">Period 3</option>
-          <option value="4">Period 4</option>
-          <option value="5">Period 5</option>
-          <option value="6">Period 6</option>
-          <option value="7">Period 7</option>
-          <option value="8">Period 8</option>
-          <option value="9">Period 9</option>
-        </select>
-        <button class="btn btn-primary" id="searchSlotBtn">Search</button>
-      </div>
+  <div class="panel" id="panel1">
+    <div class="slot-search">
+      <select id="daySelect">
+        <option value="">Select Day</option>
+        <option value="1">Day 1</option>
+        <option value="2">Day 2</option>
+        <option value="3">Day 3</option>
+        <option value="4">Day 4</option>
+        <option value="5">Day 5</option>
+        <option value="6">Day 6</option>
+      </select>
+      <select id="periodSelect">
+        <option value="">Select Period</option>
+        <option value="1">Period 1</option>
+        <option value="2">Period 2</option>
+        <option value="3">Period 3</option>
+        <option value="4">Period 4</option>
+        <option value="5">Period 5</option>
+        <option value="6">Period 6</option>
+        <option value="7">Period 7</option>
+        <option value="8">Period 8</option>
+        <option value="9">Period 9</option>
+      </select>
+      <button onclick="searchSlot()">Find Free</button>
     </div>
-
-    <div class="section" id="slotResults" style="display:none;">
-      <div id="slotResultsContent"></div>
-    </div>
+    <div id="slotResult"></div>
   </div>
 </div>
 
 <script>
-// ==================== TEACHER DATA (offline-embedded) ====================
-const TEACHERS=[{"s":"BSD","e":"Bezant Samantha Diana","c":"","b":{"1_3":"1D","1_5":"4A","1_7":"2B","2_1":"1A","2_2":"4C","2_4":"2B","2_8":"1D","3_1":"1B","3_2":"1B","3_3":"2B","3_4":"2B","4_2":"3D","4_3":"4D","4_5":"4B","4_6":"2B","4_8":"3D","4_9":"3A","5_3":"2B","5_6":"3A","6_1":"2B","6_2":"2B","6_3":"1C","6_5":"1C"}},{"s":"CHC","e":"Chan Hin Chiu","c":"陳憲潮","b":{"1_2":"6C","1_7":"5D","1_9":"1A","2_1":"5C,5D","2_2":"5C,5D","2_3":"5D","2_4":"1A","2_9":"6C","3_1":"1A","3_2":"1A","3_3":"5D","3_4":"5D","3_5":"6C","4_3":"5D","4_5":"5C,5D","4_6":"5C,5D","4_7":"1A","4_9":"6C","5_1":"6C","5_2":"6C","5_4":"5D","5_5":"1A","6_2":"5D","6_3":"1A","6_5":"6C"}},{"s":"CKY","e":"Chan Ka Ying Anna","c":"陳嘉盈","b":{"1_3":"2A","1_4":"2A","1_7":"3B","1_9":"6A,6B,6C,6D","2_1":"4A,4B,4C,4D","2_3":"6A,6B,6C,6D","2_4":"6A,6B,6C,6D","2_7":"5A,5B,5C,5D","3_1":"4A,4B,4C,4D","3_2":"3C","3_4":"6A,6B,6C,6D","3_8":"5A,5B,5C,5D","3_9":"5A,5B,5C,5D","4_1":"5A,5B,5C,5D","4_2":"4A,4B,4C,4D","4_7":"3A","5_1":"5A,5B,5C,5D","5_2":"5A,5B,5C,5D","5_6":"3D","5_7":"6A,6B,6C,6D","5_8":"4A,4B,4C,4D","5_9":"4A,4B,4C,4D","6_1":"6A,6B,6C,6D","6_2":"6A,6B,6C,6D","6_3":"4A,4B,4C,4D","6_4":"4A,4B,4C,4D","6_6":"5A,5B,5C,5D"}},{"s":"CKK1","e":"Chan Kwok Keung","c":"陳國強","b":{"1_3":"3A","1_7":"6C,6D","1_9":"6A,6B,6C,6D","2_1":"5C,5D","2_2":"5C,5D","2_3":"6A,6B,6C,6D","2_4":"6A,6B,6C,6D","2_5":"3B","2_7":"6C,6D","3_1":"6C,6D","3_2":"6C,6D","3_4":"6A,6B,6C,6D","3_7":"5C,5D","4_5":"5C,5D","4_6":"5C,5D","4_8":"3A","4_9":"2A,2B,2C,2D","5_3":"6C,6D","5_4":"6C,6D","5_5":"3B","5_7":"6A,6B,6C,6D","5_9":"5C,5D","6_1":"6A,6B,6C,6D","6_2":"6A,6B,6C,6D","6_3":"5C,5D","6_6":"6C,6D"}},{"s":"CKK","e":"Chan Kwok Kwan","c":"陳國君","b":{"1_1":"5B","1_3":"6A","1_6":"3C","2_4":"5B","2_5":"6A","2_7":"3C","2_8":"3C","3_3":"3C","3_4":"5B","3_5":"6A","3_8":"5A,5B,5C,5D","3_9":"5A,5B,5C,5D","4_1":"3C","4_3":"5B","4_4":"5B","4_9":"6A","5_1":"5A,5B,5C,5D","5_2":"5A,5B,5C,5D","5_3":"3C","5_5":"6A","5_6":"6A","5_7":"5B","6_2":"5B","6_3":"3C","6_6":"6A"}},{"s":"CLH","e":"Chan Lok Hin","c":"陳諾軒","b":{"1_2":"1B","1_3":"3B","1_4":"3B","1_5":"6A,6B,6C,6D","1_6":"6A,6B,6C,6D","1_8":"2A","2_3":"1B","2_5":"3A","2_6":"3A","2_9":"2A","3_3":"6A,6B,6C,6D","3_4":"2A","3_5":"1B","3_6":"1B","4_3":"6A,6B,6C,6D","4_4":"6A,6B,6C,6D","4_5":"3C","4_6":"3C","4_9":"2A,2B,2C,2D","5_1":"2A","5_3":"1B","5_4":"1B","5_8":"6A,6B,6C,6D","6_1":"2A","6_2":"2A","6_4":"6A,6B,6C,6D","6_7":"1B"}},{"s":"CLI","e":"Chan Lok In","c":"陳絡姸","b":{"1_7":"3A","1_8":"4A,4B,4C,4D","1_9":"4A,4B,4C,4D","2_1":"4A,4B,4C,4D","2_5":"4A,4B,4C,4D","2_6":"4A,4B,4C,4D","2_7":"1A","3_1":"4A,4B,4C,4D","3_3":"1A","3_4":"1A","3_5":"4A,4B,4C,4D","3_8":"3B","3_9":"3D","4_1":"4A,4B,4C,4D","4_2":"4A,4B,4C,4D","4_3":"1A","4_5":"3A","4_9":"2A,2B,2C,2D","5_1":"4A,4B,4C,4D","5_3":"1A","5_4":"1A","5_5":"3D","5_8":"4A,4B,4C,4D","5_9":"4A,4B,4C,4D","6_1":"1A","6_3":"4A,4B,4C,4D","6_4":"4A,4B,4C,4D","6_5":"3B"}},{"s":"COY","e":"Chan Oi Yan","c":"陳藹欣","b":{"1_3":"1D","1_5":"5A","1_6":"5A","1_7":"1D","1_9":"2C","2_1":"5A","2_2":"5A","2_7":"2C","2_8":"2C","3_2":"5A","3_3":"1D","3_4":"1D","3_6":"5A","3_7":"2C","4_1":"1D","4_3":"5A","4_5":"2C","4_6":"2C","5_3":"5A","5_4":"2C","5_5":"1D","5_6":"1D","6_1":"2C","6_5":"1D","6_7":"5A"}},{"s":"CSM","e":"Chan Shuk Man","c":"陳淑文","b":{"1_1":"3B","1_4":"1C","1_7":"3C","2_1":"3A","2_3":"1A","2_5":"1D","2_7":"5A,5B,5C,5D","3_4":"3B","3_5":"3C","3_8":"5A,5B,5C,5D","3_9":"5A,5B,5C,5D","4_1":"5A,5B,5C,5D","4_2":"1B","4_4":"1A","4_9":"3D","5_1":"5A,5B,5C,5D","5_2":"5A,5B,5C,5D","5_5":"3A","5_7":"1D","5_9":"1C","6_2":"1B","6_5":"3D","6_6":"5A,5B,5C,5D"}},{"s":"CTM","e":"Chan Tsz Man","c":"陳子文","b":{"1_1":"4C,4D","1_2":"4C,4D","1_3":"5A,5B,5C,5D","1_4":"5A,5B,5C,5D","2_1":"5C,5D","2_2":"5C,5D","2_4":"4C,4D","2_8":"5A,5B,5C,5D","2_9":"5A,5B,5C,5D","3_6":"3C","3_7":"5C,5D","4_2":"5A,5B,5C,5D","4_5":"5C,5D","4_6":"5C,5D","4_7":"4C,4D","4_8":"4C,4D","4_9":"2A,2B,2C,2D","5_5":"5A,5B,5C,5D","5_7":"4C,4D","5_9":"5C,5D","6_1":"4C,4D","6_3":"5C,5D","6_5":"5A,5B,5C,5D","6_7":"3C"}},{"s":"CWY","e":"Chan Wing Yin","c":"陳穎賢","b":{"1_1":"6D","1_6":"4A","1_7":"3D","1_8":"3D","2_2":"4A","2_7":"3D","2_8":"6D","2_9":"6D","3_5":"3D","3_6":"4A","3_8":"6D","3_9":"6D","4_2":"3D","4_5":"3D","4_6":"6D","4_7":"4A","5_1":"6D","5_5":"4A","5_6":"4A","5_9":"3D","6_1":"4A","6_2":"4A","6_3":"3D","6_4":"3D","6_5":"6D"}},{"s":"CYS","e":"Chan Yau Sing","c":"陳有成","b":{"1_4":"6D","1_7":"2A","2_3":"6A,6B,6C,6D","2_4":"6A,6B,6C,6D","2_5":"6D","2_7":"2A","3_5":"6D","3_6":"6D","3_9":"2A","4_3":"2A","4_4":"2A","4_9":"6D","5_2":"6D","5_5":"2A","5_7":"6A,6B,6C,6D","5_8":"4A,4B,4C,4D","5_9":"4A,4B,4C,4D","6_1":"6A,6B,6C,6D","6_2":"6A,6B,6C,6D","6_3":"4A,4B,4C,4D","6_4":"4A,4B,4C,4D","6_6":"2A","6_7":"6D"}},{"s":"CYW","e":"Chan Yuk Wah","c":"陳玉華","b":{"1_1":"5D","1_2":"5D","1_5":"2D","2_1":"2D","2_2":"2D","2_4":"5D","2_7":"2D","3_2":"5D","3_7":"2D","3_8":"2D","4_6":"2D","4_7":"5D","4_8":"5D","5_6":"5D","5_9":"2D","6_6":"2D","6_7":"5D"}},{"s":"CYC","e":"Chan Yung Cheung","c":"陳容彰","b":{"1_2":"2A","1_4":"2B","1_5":"1D","1_6":"1D","1_7":"2D","2_3":"2D","2_4":"2D","2_5":"2C","3_2":"2D","3_7":"2B","4_3":"1C","4_4":"1C","5_6":"2A","5_8":"2C","6_3":"2C","6_4":"2C"}},{"s":"CCW","e":"Cheung Chi Wai","c":"張志威","b":{"1_1":"5A","1_2":"5A","1_5":"2B","1_6":"2B","1_8":"1C","2_4":"5A","2_5":"2B","2_6":"2B","3_2":"2C","3_3":"5A","3_4":"5A","3_5":"2B","3_7":"2A","3_8":"2B","4_3":"2B","4_5":"2B","4_6":"3A","4_7":"5A","4_8":"1D","5_2":"2B","5_4":"5A","5_5":"2D","5_7":"3D","5_8":"1A","6_1":"5A","6_4":"2B"}},{"s":"CHN","e":"Cheung Hoi Ning","c":"張凱寧","b":{"1_2":"5B","1_6":"2D","1_7":"4D","1_9":"5B","2_1":"5B","2_2":"5B","2_3":"4D","2_8":"2A","3_3":"4D","3_4":"4D","3_5":"5B","3_6":"5B","4_3":"4D","4_4":"4D","4_7":"5B","5_3":"5B","5_5":"4D","5_6":"4D","5_7":"2B","5_9":"2C","6_3":"5B","6_7":"4D"}},{"s":"CMB","e":"Cheung Man Bun","c":"張汶彬","b":{"1_3":"4A,4D","1_4":"4A,4D","1_7":"5B,5C","1_8":"5B,5C","2_1":"2A,2B","2_2":"2A,2B","2_3":"3C,3D","2_4":"3C,3D","3_3":"4B,4C","3_4":"4B,4C","3_7":"6B,6C","3_8":"6B,6C","4_1":"2C,2D","4_2":"2C,2D","4_7":"6A,6D","4_8":"6A,6D","5_1":"1A,1B","5_2":"1A,1B","5_7":"5A,5D","5_8":"5A,5D","6_1":"1C,1D","6_2":"1C,1D","6_3":"3A,3B","6_4":"3A,3B"}},{"s":"CPH","e":"Cheung Pak Ho","c":"張柏皓","b":{"1_1":"1D","1_2":"1D","1_3":"2B","1_4":"1D","1_6":"4B","2_2":"4B","2_3":"1D","2_4":"1D","2_6":"1D","2_8":"2B","2_9":"2B","3_1":"1D","3_5":"1D","3_6":"2B","3_7":"4B","4_3":"1D","4_6":"4B","4_7":"1D","4_8":"2B","4_9":"2A,2B,2C,2D","5_1":"2B","5_3":"1D","5_4":"1D","5_6":"4B","6_1":"4B","6_2":"4B","6_6":"1D","6_7":"1D"}},{"s":"CKC","e":"Chu Ki Cheong","c":"朱其昌","b":{"1_1":"3A","1_5":"6A,6B,6C,6D","1_6":"6A,6B,6C,6D","1_7":"6C,6D","1_8":"4A,4B,4C,4D","1_9":"4A,4B,4C,4D","2_5":"4A,4B,4C,4D","2_6":"4A,4B,4C,4D","2_7":"6C,6D","3_1":"6C,6D","3_2":"6C,6D","3_3":"6A,6B,6C,6D","3_5":"4A,4B,4C,4D","3_7":"3B","3_9":"3A","4_1":"4A,4B,4C,4D","4_3":"6A,6B,6C,6D","4_4":"6A,6B,6C,6D","4_6":"3D","4_9":"2A,2B,2C,2D","5_1":"4A,4B,4C,4D","5_2":"3B","5_3":"6C,6D","5_4":"6C,6D","5_8":"6A,6B,6C,6D","6_2":"3D","6_4":"6A,6B,6C,6D","6_6":"6C,6D"}},{"s":"CTK","e":"Chung Ting Kai","c":"鍾廷楷","b":{"1_9":"5A","2_3":"5A","3_1":"5A","4_5":"5A","4_6":"5A","5_9":"5A","6_2":"5A"}},{"s":"CYW1","e":"Chung Yuen Wah","c":"鍾沅樺","b":{"1_5":"1B","1_6":"1C","1_9":"5C","2_3":"5C","2_4":"1B","2_7":"1B","2_8":"1B","2_9":"1C","3_3":"1C","3_4":"5C","3_5":"1C","3_6":"1C","3_7":"1B","4_3":"5C","4_7":"1B","4_8":"1C","4_9":"1C","5_1":"1C","5_3":"5C","5_4":"5C","5_7":"1B","5_8":"1B","6_2":"5C","6_4":"1B","6_5":"1A","6_6":"1A","6_7":"1C"}},{"s":"FPY","e":"Fong Pik Yuk","c":"方璧鈺","b":{"1_1":"5C","1_2":"5C","1_4":"1B","1_5":"4B","1_6":"1B","2_4":"5C","2_5":"1B","2_6":"1B","2_8":"4B","2_9":"4B","3_3":"5C","3_6":"4B","3_8":"1B","3_9":"1B","4_6":"1B","4_7":"5C","4_8":"5C","4_9":"4B","5_3":"4B","5_4":"4B","5_6":"5C","5_9":"1B","6_1":"5C","6_3":"1B","6_5":"4B"}},{"s":"HYL","e":"Ho Yi Lok","c":"何懿洛","b":{"1_1":"2C","1_2":"2C","1_3":"3D","1_4":"3D","2_3":"3B","2_4":"3B","2_5":"5A,5B","2_6":"5A,5B","2_7":"4A,4B","3_1":"3A","3_2":"3A","3_7":"5A,5B","3_8":"4A,4B","3_9":"4A,4B","4_1":"2B","4_2":"2B","4_3":"4A,4B","4_4":"4A,4B","4_8":"5A,5B","4_9":"5A,5B","5_1":"2D","5_2":"2D","5_6":"5A,5B","5_7":"4A,4B","5_8":"2A","5_9":"2A","6_1":"3C","6_2":"3C","6_4":"5A,5B","6_6":"4A,4B"}},{"s":"HCM","e":"Hung Chun Man","c":"洪俊敏","b":{"1_1":"2D","1_2":"2D","1_5":"1C","1_7":"1A","2_3":"2B","2_9":"1B","3_1":"2A","3_4":"1C","3_5":"1A","3_6":"1D","3_8":"1D","3_9":"1D","4_1":"3D","4_2":"3B","4_5":"1A","4_6":"1A","4_8":"1B","4_9":"1B","5_2":"3A","5_4":"2D","5_5":"2C","5_6":"3C","5_7":"1C","5_8":"1C","6_1":"1B","6_4":"1D"}},{"s":"HNS","e":"Hussain Nibla Shabir","c":"妮娜","b":{"1_1":"1A","1_2":"1A","1_5":"3B","1_6":"2D","1_7":"2C","1_9":"5B","2_1":"1A","2_2":"1A","2_5":"5C","2_7":"2D","2_8":"2A","3_1":"5D","3_2":"5A","3_3":"2A","3_8":"1A","3_9":"3C","4_5":"2B","4_6":"3B","4_8":"1A","4_9":"1A","5_1":"3C","5_6":"1A","5_7":"2B","5_9":"2C","6_7":"1A"}},{"s":"KCH","e":"Kiang Chi Hong","c":"姜智康","b":{"1_1":"4C,4D","1_2":"4C,4D","1_6":"4D","1_9":"2D","2_2":"4D","2_7":"6C,6D","2_9":"2D","3_1":"6C,6D","3_2":"6C,6D","3_5":"2D","3_6":"2D","3_7":"4D","3_8":"4D","4_4":"2D","4_5":"4D","4_7":"4C,4D","4_8":"4C,4D","5_2":"4D","5_3":"6C,6D","5_4":"6C,6D","5_7":"2D","5_8":"1D","5_9":"1D","6_2":"4D","6_4":"2D"}},{"s":"KLH","e":"Kong Lai Han","c":"江麗嫻","b":{"1_1":"1B","1_3":"2A","1_4":"2A","1_5":"1D","1_6":"1D","2_3":"2D","2_4":"2D","2_5":"1A","2_6":"1A","2_7":"1D","3_1":"5C","3_2":"5C","3_3":"1B","3_4":"1B","4_1":"1B","4_2":"1D","4_3":"1C","4_4":"1C","5_5":"2B","5_6":"2B","5_7":"5C","6_3":"2C","6_4":"2C","6_7":"5C"}},{"s":"KY","e":"Koo Yiu","c":"顧耀","b":{"1_3":"5A,5B,5C,5D","1_4":"5A,5B,5C,5D","1_5":"6A,6B,6C,6D","1_6":"6A,6B,6C,6D","1_9":"6A,6B,6C,6D","2_1":"3C","2_3":"6A,6B,6C,6D","2_4":"6A,6B,6C,6D","2_7":"5A,5B,5C,5D","2_8":"5A,5B,5C,5D","2_9":"5A,5B,5C,5D","3_3":"6A,6B,6C,6D","3_4":"6A,6B,6C,6D","3_8":"5A,5B,5C,5D","3_9":"5A,5B,5C,5D","4_1":"5A,5B,5C,5D","4_2":"5A,5B,5C,5D","4_3":"6A,6B,6C,6D","4_4":"6A,6B,6C,6D","4_9":"3C","5_1":"5A,5B,5C,5D","5_2":"5A,5B,5C,5D","5_5":"5A,5B,5C,5D","5_7":"6A,6B,6C,6D","5_8":"6A,6B,6C,6D","6_1":"6A,6B,6C,6D","6_2":"6A,6B,6C,6D","6_4":"6A,6B,6C,6D","6_5":"5A,5B,5C,5D","6_6":"5A,5B,5C,5D"}},{"s":"KPP","e":"Kwok Pui Pui","c":"郭佩佩","b":{"1_1":"6C","1_3":"6D","1_4":"6A","1_8":"5D","1_9":"5D","2_5":"5D","2_6":"5D","3_1":"5D","3_6":"5D","3_9":"3C","4_1":"6B","4_2":"5A,5B,5C,5D","4_4":"5D","4_6":"3B","4_8":"3D","4_9":"3A","5_3":"5D","5_6":"5A,5B","5_9":"5C,5D","6_4":"5D","6_6":"5A,5B,5C,5D"}},{"s":"LKY","e":"Lam Ka Yan","c":"林嘉欣","b":{"1_3":"2D","1_8":"2C","1_9":"6A,6B,6C,6D","2_1":"4A,4B,4C,4D","2_3":"6A,6B,6C,6D","2_4":"6A,6B,6C,6D","3_1":"4A,4B,4C,4D","3_2":"2A","3_3":"2C","3_4":"6A,6B,6C,6D","3_7":"4C","3_8":"4C","4_2":"4A,4B,4C,4D","4_7":"2B","5_2":"2A","5_6":"2D","5_7":"6A,6B,6C,6D","5_8":"4A,4B,4C,4D","5_9":"4A,4B,4C,4D","6_1":"6A,6B,6C,6D","6_2":"6A,6B,6C,6D","6_3":"4A,4B,4C,4D","6_4":"4A,4B,4C,4D","6_7":"2B"}},{"s":"LMP","e":"Lam Mei Po","c":"林美寶","b":{"1_2":"3B","1_3":"6B","1_5":"3A","1_6":"3A","1_8":"2B","1_9":"2B","2_3":"3A","2_5":"6B","2_7":"2B","2_8":"3B","2_9":"3B","3_1":"2B","3_3":"3B","3_4":"3A","3_5":"6B","4_3":"3A","4_4":"2B","4_8":"3B","4_9":"6B","5_1":"6B","5_2":"6B","5_4":"3A","5_6":"3B","5_9":"2B","6_1":"3B","6_2":"3A","6_3":"2B","6_6":"6B"}},{"s":"LON","e":"Lam On Nei","c":"林安妮","b":{"1_5":"1A","1_6":"1A","1_7":"6A,6B","1_8":"1B","1_9":"1B","2_1":"1C","2_2":"1C","2_8":"6A,6B","2_9":"6A,6B","3_3":"1B","3_4":"1B","3_6":"6A,6B","4_5":"1D","4_6":"1D","5_3":"6A,6B","5_4":"6A,6B","5_5":"2B","5_6":"2B","6_5":"6A,6B"}},{"s":"LSY","e":"Lam Shuk Ying","c":"林淑瑩","b":{"1_3":"3C","1_4":"3C","1_5":"4A","1_7":"4A","2_8":"4A","2_9":"3C","3_3":"4A","3_4":"4A","3_8":"3C","4_3":"3C","4_4":"3C","4_8":"4A","4_9":"4A","5_4":"4A","5_5":"3C","6_4":"3C","6_7":"4A"}},{"s":"LWL","e":"Lam Wai Ling","c":"林偉玲","b":{"1_1":"6A","1_2":"6A","1_5":"3B","1_8":"3B","1_9":"3A","2_2":"3B","2_7":"6A","2_9":"3A","3_1":"6A","3_2":"6A","3_5":"3B","3_6":"3B","3_7":"3A","3_8":"3A","4_1":"3A","4_2":"3A","4_5":"6A","4_9":"3B","5_2":"6A","5_3":"3B","5_4":"3B","5_6":"3A","5_7":"3A","6_1":"3A","6_6":"3B","6_7":"6A"}},{"s":"LWM","e":"Lam Wai Man","c":"林偉文","b":{"1_1":"1C","1_2":"1C","1_4":"2D","1_6":"2C","1_8":"1A","1_9":"1C","2_4":"2C","2_5":"2D","2_6":"2D","2_8":"1C","3_7":"1C","3_8":"1C","3_9":"2D","4_2":"1A","4_4":"2C","4_5":"2D","4_9":"2A,2B,2C,2D","5_1":"2C","5_2":"2C","5_3":"1C","5_4":"1C","6_5":"2D","6_6":"1C","6_7":"2C"}},{"s":"LNM","e":"Lau Nga Man","c":"劉雅雯","b":{"1_2":"6D","1_3":"1A","1_4":"1A","1_5":"4D","1_8":"6B","2_7":"4D","2_8":"1A","2_9":"1A","3_2":"4D","3_5":"5D","3_6":"4D","3_7":"1A","4_1":"1A","4_2":"6C","4_4":"5C","4_5":"4C","4_6":"6A","4_9":"4D","5_3":"4D","5_4":"4D","5_7":"1A","6_3":"5A","6_4":"1A","6_5":"4D","6_6":"4D","6_7":"5B"}},{"s":"LWK1","e":"Lau Wing Kwan","c":"劉永坤","b":{"1_5":"3C","1_6":"3D","1_7":"6A,6B","1_8":"3A","2_1":"3B","2_5":"5A,5B","2_6":"5A,5B","2_7":"4A,4B","2_8":"6A,6B","2_9":"6A,6B","3_3":"3A","3_6":"6A,6B","3_7":"5A,5B","3_8":"4A,4B","3_9":"4A,4B","4_3":"4A,4B","4_4":"4A,4B","4_7":"3D","4_8":"5A,5B","4_9":"5A,5B","5_1":"3B","5_3":"6A,6B","5_4":"6A,6B","5_6":"5A,5B","5_7":"4A,4B","5_8":"3C","6_4":"5A,5B","6_5":"6A,6B","6_6":"4A,4B"}},{"s":"LPL","e":"Leung Pui Ling","c":"梁佩玲","b":{"1_1":"6C","1_3":"4C","1_4":"4C","1_8":"6C","2_2":"4C","2_5":"6C","2_6":"6C","2_9":"4C","3_4":"6A,6B,6C,6D","3_6":"4C","3_9":"6C","4_7":"6C","4_8":"6C","4_9":"4C","5_3":"4C","5_4":"4C","5_8":"6A,6B,6C,6D","5_9":"6C","6_2":"4C","6_3":"6C","6_5":"6A,6B","6_6":"6C,6D"}},{"s":"LCS","e":"Li Chi Shing","c":"李志誠","b":{"1_1":"2B","1_2":"2B","1_3":"5A,5B,5C,5D","1_4":"5A,5B,5C,5D","1_8":"4A,4B,4C,4D","1_9":"4A,4B,4C,4D","2_1":"2C","2_2":"2C","2_5":"4A,4B,4C,4D","2_6":"4A,4B,4C,4D","2_8":"5A,5B,5C,5D","2_9":"5A,5B,5C,5D","3_5":"4A,4B,4C,4D","3_7":"3D","3_8":"3D","4_1":"4A,4B,4C,4D","4_2":"5A,5B,5C,5D","4_7":"2A","4_8":"2A","4_9":"2A,2B,2C,2D","5_1":"4A,4B,4C,4D","5_5":"5A,5B,5C,5D","6_1":"2D","6_2":"2D","6_5":"5A,5B,5C,5D"}},{"s":"LS","e":"Li Silin","c":"李斯琳","b":{"1_1":"6B","1_2":"6B","1_5":"2A","1_8":"2D","2_1":"6B","2_2":"6B","2_3":"2A","2_4":"2A","2_8":"2D","3_3":"2D","3_4":"2D","3_6":"2A","3_9":"6B","4_1":"6B","4_2":"6B","4_5":"2A","4_6":"2A","4_7":"2D","4_8":"2D","5_3":"2D","5_4":"2A","5_6":"6B","6_3":"6B","6_5":"2A","6_7":"2D"}},{"s":"LCW","e":"Lo Chiu Wing","c":"盧昭榮","b":{"1_1":"4B","1_2":"4B","1_4":"6A","1_8":"6A","1_9":"3B","2_1":"6A","2_2":"6A","2_3":"4B","2_4":"4B","2_6":"3B","3_2":"4B","3_7":"6A","3_9":"3B","4_1":"6A","4_2":"6A","4_3":"3B","4_4":"3B","4_5":"4B","4_8":"4B","5_5":"4B","5_7":"3B","5_8":"3B","5_9":"6A","6_2":"3B","6_3":"6A","6_7":"4B"}},{"s":"LYF","e":"Lui Yu Fong","c":"呂渝方","b":{"1_3":"4A,4D","1_4":"4A,4D","1_7":"5B,5C","1_8":"5B,5C","2_1":"2A,2B","2_2":"2A,2B","2_3":"3C,3D","2_4":"3C,3D","3_3":"4B,4C","3_4":"4B,4C","3_7":"6B,6C","3_8":"6B,6C","4_1":"2C,2D","4_2":"2C,2D","4_7":"6A,6D","4_8":"6A,6D","5_1":"1A,1B","5_2":"1A,1B","5_7":"5A,5D","5_8":"5A,5D","6_1":"1C,1D","6_2":"1C,1D","6_3":"3A,3B","6_4":"3A,3B"}},{"s":"MSM","e":"Mak Shuk Man","c":"麥淑雯","b":{"1_3":"5A,5B,5C,5D","1_4":"5A,5B,5C,5D","1_5":"6A,6B,6C,6D","1_6":"6A,6B,6C,6D","1_8":"4A,4B,4C,4D","1_9":"4A,4B,4C,4D","2_4":"3A","2_5":"4A,4B,4C,4D","2_6":"4A,4B,4C,4D","2_8":"5A,5B,5C,5D","2_9":"5A,5B,5C,5D","3_2":"3B","3_3":"6A,6B,6C,6D","3_5":"4A,4B,4C,4D","4_1":"4A,4B,4C,4D","4_2":"5A,5B,5C,5D","4_3":"6A,6B,6C,6D","4_4":"6A,6B,6C,6D","5_1":"4A,4B,4C,4D","5_3":"3A","5_5":"5A,5B,5C,5D","5_8":"6A,6B,6C,6D","5_9":"3B","6_4":"6A,6B,6C,6D","6_5":"5A,5B,5C,5D"}},{"s":"MSY","e":"Mak Sin Yee","c":"麥倩儀","b":{"1_1":"3D","1_2":"3D","1_3":"6D","1_4":"3A","1_8":"6D","2_2":"3D","2_6":"6D","2_7":"3A","2_8":"4D","2_9":"4D","3_1":"3D","3_2":"3D","3_5":"3A","3_6":"3A","3_7":"6D","4_1":"6D","4_2":"6D","4_3":"3D","4_4":"3A","5_1":"3A","5_2":"3D","5_5":"6D","5_6":"6D","6_3":"6D","6_5":"3A","6_6":"3A","6_7":"3D"}},{"s":"MTH","e":"Mak Tsui Han","c":"麥翠嫻","b":{"1_3":"1C","1_5":"5C","1_6":"5C","1_7":"1B","2_1":"1B","2_3":"1C","2_4":"1C","2_5":"5C","2_6":"5C","3_2":"1B","3_5":"5C","3_6":"5C","3_9":"1C","4_3":"1B","4_4":"1B","4_5":"1C","4_6":"1C","4_9":"5C","5_5":"1C","5_6":"1B","5_8":"5C","6_3":"1C","6_4":"5C","6_5":"1B","6_6":"1B"}},{"s":"NOY","e":"Ng Oi Yan","c":"吳靄茵","b":{"1_1":"4C,4D","1_2":"4C,4D","1_5":"3D","2_1":"4A,4B,4C,4D","2_4":"4C,4D","2_5":"1A","2_6":"1A","2_7":"5A,5B,5C,5D","3_1":"4A,4B,4C,4D","3_3":"3D","3_4":"3C","3_8":"5A,5B,5C,5D","3_9":"5A,5B,5C,5D","4_1":"5A,5B,5C,5D","4_2":"4A,4B,4C,4D","4_7":"4C,4D","4_8":"4C,4D","5_1":"5A,5B,5C,5D","5_2":"5A,5B,5C,5D","5_7":"4C,4D","5_8":"4A,4B,4C,4D","5_9":"4A,4B,4C,4D","6_1":"4C,4D","6_3":"4A,4B,4C,4D","6_4":"4A,4B,4C,4D","6_5":"3C","6_6":"5A,5B,5C,5D"}},{"s":"SWP","e":"Sha Wai Pak","c":"沙偉栢","b":{"1_3":"5A,5B,5C,5D","1_4":"5A,5B,5C,5D","1_8":"3C","2_2":"3A","2_5":"5A,5B","2_6":"5A,5B","2_7":"4A,4B","2_8":"5A,5B,5C,5D","2_9":"5A,5B,5C,5D","3_6":"3D","3_7":"5A,5B","3_8":"4A,4B","3_9":"4A,4B","4_1":"3B","4_2":"5A,5B,5C,5D","4_3":"4A,4B","4_4":"4A,4B","4_8":"5A,5B","4_9":"5A,5B","5_3":"3D","5_4":"3C","5_5":"5A,5B,5C,5D","5_6":"5A,5B","5_7":"4A,4B","5_9":"3A","6_4":"5A,5B","6_5":"5A,5B,5C,5D","6_6":"4A,4B","6_7":"3B"}},{"s":"SCL","e":"Suen Chun Long","c":"孫雋朗","b":{"1_1":"3C","1_2":"3A","1_6":"3B","1_7":"4B","1_9":"2A","2_2":"1B","2_6":"2C","2_7":"1C","2_9":"1D","3_1":"5B","3_2":"5B","3_5":"2A","3_6":"1A","3_8":"2C","3_9":"2C","4_4":"1D","4_5":"5B","4_6":"4A","4_7":"1C","5_4":"5B","5_5":"1B","5_6":"2C","5_8":"3D","5_9":"1A","6_3":"2A","6_4":"2A","6_5":"2B","6_6":"2B"}},{"s":"TWF","e":"Toa Wai Fook","c":"陶偉福","b":{"1_1":"4A","1_2":"4A","1_3":"2C","1_4":"2C","1_7":"4C","1_9":"3D","2_3":"2C","2_5":"3D","2_6":"3D","2_7":"4C","2_8":"4C","2_9":"4A","3_1":"2C","3_2":"4C","3_4":"3D","3_7":"4A","4_3":"2C","4_4":"3D","4_5":"4A","4_6":"4C","5_2":"4A","5_4":"3D","5_5":"4C","5_7":"2C","6_1":"3D","6_2":"2C","6_5":"4A","6_6":"4C"}},{"s":"TMF","e":"Tsao Man Fai","c":"曹文翬","b":{"1_3":"4B","1_4":"4B","1_5":"5D","1_6":"5D","2_1":"6C","2_2":"6C","2_3":"4A","2_4":"4A","2_6":"6A","2_8":"3D","3_1":"3B","3_2":"4A","3_8":"6A","3_9":"6A","4_1":"6C","4_2":"3C","4_7":"4B","4_9":"5D","5_1":"6A","5_2":"4B","5_3":"4A","5_6":"6C","5_8":"3A","6_1":"5D"}},{"s":"TYL","e":"Tsoi Yiu Lam","c":"蔡堯琳","b":{"1_3":"4B","1_4":"4B","1_5":"2C","1_6":"2A","1_7":"2C","2_1":"3D","2_2":"3C","2_5":"2A","2_6":"2A","2_9":"2C","3_1":"2D","3_3":"2A","3_5":"2C","3_6":"2C","3_8":"2A","3_9":"2B","4_1":"2A","4_2":"2A","4_7":"2C","4_8":"2C","5_1":"3D","5_3":"2C","5_4":"2B","5_7":"2A","5_8":"2D","5_9":"3C","6_6":"2C","6_7":"2A"}},{"s":"WKT","e":"Wong Kwok Tai","c":"黃國大","b":{"1_1":"2A","1_7":"5A","1_8":"5A","2_1":"6D","2_2":"6D","2_7":"6B","2_8":"4D","2_9":"4D","3_2":"2B","3_4":"2C","3_5":"5A","3_7":"4C","3_8":"4C","3_9":"4D","4_3":"2D","4_4":"5A","4_5":"6D","4_6":"4D","4_7":"6B","4_8":"6B","5_3":"2A","5_5":"6B","5_6":"4C","5_8":"2B","5_9":"6D","6_3":"2D","6_5":"2C","6_7":"4C"}},{"s":"WMH","e":"Wong Man Han","c":"王敏嫻","b":{"2_1":"4A,4B,4C,4D","3_1":"4A,4B,4C,4D","4_2":"4A,4B,4C,4D","5_8":"4A,4B,4C,4D","5_9":"4A,4B,4C,4D","6_3":"4A,4B,4C,4D","6_4":"4A,4B,4C,4D"}},{"s":"WSF","e":"Wong Shing Fung","c":"黃丞鋒","b":{"1_3":"5A,5B,5C,5D","1_4":"5A,5B,5C,5D","1_5":"6A,6B,6C,6D","1_6":"6A,6B,6C,6D","1_8":"4A,4B,4C,4D","1_9":"4A,4B,4C,4D","2_3":"4A","2_4":"4A","2_5":"4A,4B,4C,4D","2_6":"4A,4B,4C,4D","2_8":"5A,5B,5C,5D","2_9":"5A,5B,5C,5D","3_3":"6A,6B,6C,6D","3_5":"4A,4B,4C,4D","4_1":"4A,4B,4C,4D","4_2":"5A,5B,5C,5D","4_3":"6A,6B,6C,6D","4_4":"6A,6B,6C,6D","4_5":"3B","5_1":"4A,4B,4C,4D","5_2":"3C","5_5":"5A,5B,5C,5D","5_8":"6A,6B,6C,6D","6_4":"6A,6B,6C,6D","6_5":"5A,5B,5C,5D","6_6":"3D","6_7":"3A"}},{"s":"WSY","e":"Wong Suk Yin","c":"王淑賢","b":{"1_5":"5B","1_6":"5B","1_7":"1C","1_8":"1D","1_9":"1D","2_1":"1D","2_2":"1D","2_3":"5B","2_5":"1C","2_6":"1C","3_1":"1C","3_2":"1D","3_3":"5B","4_1":"1C","4_2":"1C","4_6":"5B","4_9":"1D","5_1":"1D","5_2":"1C","5_8":"5B","5_9":"5B","6_1":"5B","6_3":"1D","6_4":"1C"}},{"s":"YHM","e":"Yao Hing Man","c":"姚慶萬","b":{"1_2":"3C","1_4":"6B","1_9":"6A,6B,6C,6D","2_3":"6A,6B,6C,6D","2_4":"6A,6B,6C,6D","2_6":"6B","2_7":"5A,5B,5C,5D","2_8":"3A","2_9":"3D","3_1":"6B","3_2":"6B","3_4":"6A,6B,6C,6D","3_8":"5A,5B,5C,5D","3_9":"5A,5B,5C,5D","4_1":"5A,5B,5C,5D","4_5":"6B","4_6":"6B","4_7":"3B","5_1":"5A,5B,5C,5D","5_2":"5A,5B,5C,5D","5_7":"6A,6B,6C,6D","5_9":"6B","6_1":"6A,6B,6C,6D","6_2":"6A,6B,6C,6D","6_6":"5A,5B,5C,5D","6_7":"6B"}},{"s":"YKM","e":"Yip Kin Man","c":"葉健文","b":{"1_3":"1B","1_5":"6A,6B,6C,6D","1_6":"6A,6B,6C,6D","1_7":"6A,6B","1_8":"4A,4B,4C,4D","1_9":"4A,4B,4C,4D","2_5":"4A,4B,4C,4D","2_6":"4A,4B,4C,4D","2_8":"6A,6B","2_9":"6A,6B","3_2":"1C","3_3":"6A,6B,6C,6D","3_5":"4A,4B,4C,4D","3_6":"6A,6B","3_7":"1D","3_9":"1A","4_1":"4A,4B,4C,4D","4_3":"6A,6B,6C,6D","4_4":"6A,6B,6C,6D","4_5":"1B","5_1":"4A,4B,4C,4D","5_2":"1D","5_3":"6A,6B","5_4":"6A,6B","5_6":"1C","5_8":"6A,6B,6C,6D","6_2":"1A","6_4":"6A,6B,6C,6D","6_5":"6A,6B"}},{"s":"YSP","e":"Yu Siu Ping","c":"余小冰","b":{"1_3":"6C","1_4":"6C","1_5":"4C","1_6":"4C","1_9":"3C","2_3":"4C","2_5":"3C","2_6":"3C","2_7":"3B","2_8":"6C","3_1":"3C","3_6":"6C","3_7":"3C","3_9":"4C","4_3":"4C","4_4":"4C","4_5":"6C","4_6":"6C","4_7":"3C","4_8":"3C","5_1":"3C","5_2":"4C","5_5":"6C","5_7":"3C","6_5":"4C","6_6":"3C","6_7":"6C"}}];
+var SGDS = ["CTK","CMB","MSM","CHC","SWP","KCH","FPY","CLH","LSY","TWF","YSP","LCW","HYL","CLI"];
 
-// Student Guidance and Discipline Services teachers
-const SGDS_TEACHERS = ['CTK','CMB','MSM','CHC','SWP','KCH','FPY','CLH','LSY','TWF','YSP','LCW','HYL','CLI'];
+var DATA = [{"s":"BSD","e":"Bezant Samantha Diana","c":"","b":{"1_3":"1D|ENG","1_5":"4A|ENG","1_7":"2B|ENG","2_1":"1A|ENG","2_2":"4C|ENG","2_4":"2B|ENG","2_8":"1D|ENG","3_1":"1B|ENG","3_2":"1B|ENG","3_3":"2B|ENG","3_4":"2B|ENG","4_2":"3D|ENG","4_3":"4D|ENG","4_5":"4B|ENG","4_6":"2B|ENG","4_8":"3D|ENG","4_9":"3A|ENG","5_3":"2B|ENG","5_6":"3A|ENG","6_1":"2B|ENG","6_2":"2B|ENG","6_3":"1C|ENG","6_5":"1C|ENG"}},{"s":"CHC","e":"Chan Hin Chiu","c":"陳憲潮","b":{"1_2":"6C|MACO","1_7":"5D|MACO","1_9":"1A|MATH","2_1":"5C,5D|MAM1","2_2":"5C,5D|MAM1","2_3":"5D|MACO","2_4":"1A|MATH","2_9":"6C|MACO","3_1":"1A|MATH","3_2":"1A|MATH","3_3":"5D|MACO","3_4":"5D|MACO","3_5":"6C|MACO","4_3":"5D|MACO","4_5":"5C,5D|MAM1","4_6":"5C,5D|MAM1","4_7":"1A|MATH","4_9":"6C|MACO","5_1":"6C|MACO","5_2":"6C|MACO","5_4":"5D|MACO","5_5":"1A|MATH","6_2":"5D|MACO","6_3":"1A|MATH","6_5":"6C|MACO"}},{"s":"CKY","e":"Chan Ka Ying Anna","c":"陳嘉盈","b":{"1_3":"2A|WVE","1_4":"2A|WVE","1_7":"3B|EPA","1_9":"6A,6B,6C,6D|BM","2_1":"4A,4B,4C,4D|BM","2_3":"6A,6B,6C,6D|BM","2_4":"6A,6B,6C,6D|BM","2_7":"5A,5B,5C,5D|BM","3_1":"4A,4B,4C,4D|BM","3_2":"3C|EPA","3_4":"6A,6B,6C,6D|BM","3_8":"5A,5B,5C,5D|BM","3_9":"5A,5B,5C,5D|BM","4_1":"5A,5B,5C,5D|BM","4_2":"4A,4B,4C,4D|BM","4_7":"3A|EPA","5_1":"5A,5B,5C,5D|BM","5_2":"5A,5B,5C,5D|BM","5_6":"3D|EPA","5_7":"6A,6B,6C,6D|BM","5_8":"4A,4B,4C,4D|BM","5_9":"4A,4B,4C,4D|BM","6_1":"6A,6B,6C,6D|BM","6_2":"6A,6B,6C,6D|BM","6_3":"4A,4B,4C,4D|BM","6_4":"4A,4B,4C,4D|BM","6_6":"5A,5B,5C,5D|BM"}},{"s":"CKK1","e":"Chan Kwok Keung","c":"陳國強","b":{"1_3":"3A|Bio","1_7":"6C,6D|BIO","1_9":"6A,6B,6C,6D|BIO","2_1":"5C,5D|BIO","2_2":"5C,5D|BIO","2_3":"6A,6B,6C,6D|BIO","2_4":"6A,6B,6C,6D|BIO","2_5":"3B|Bio","2_7":"6C,6D|BIO","3_1":"6C,6D|BIO","3_2":"6C,6D|BIO","3_4":"6A,6B,6C,6D|BIO","3_7":"5C,5D|BIO","4_5":"5C,5D|BIO","4_6":"5C,5D|BIO","4_8":"3A|Bio","4_9":"2A,2B,2C,2D|STEM","5_3":"6C,6D|BIO","5_4":"6C,6D|BIO","5_5":"3B|Bio","5_7":"6A,6B,6C,6D|BIO","5_9":"5C,5D|BIO","6_1":"6A,6B,6C,6D|BIO","6_2":"6A,6B,6C,6D|BIO","6_3":"5C,5D|BIO","6_6":"6C,6D|BIO"}},{"s":"CKK","e":"Chan Kwok Kwan","c":"陳國君","b":{"1_1":"5B|MACO","1_3":"6A|MACO","1_6":"3C|MATH","2_4":"5B|MACO","2_5":"6A|MACO","2_7":"3C|MATH","2_8":"3C|MATH","3_3":"3C|MATH","3_4":"5B|MACO","3_5":"6A|MACO","3_8":"5A,5B,5C,5D|MAM2","3_9":"5A,5B,5C,5D|MAM2","4_1":"3C|MATH","4_3":"5B|MACO","4_4":"5B|MACO","4_9":"6A|MACO","5_1":"5A,5B,5C,5D|MAM2","5_2":"5A,5B,5C,5D|MAM2","5_3":"3C|MATH","5_5":"6A|MACO","5_6":"6A|MACO","5_7":"5B|MACO","6_2":"5B|MACO","6_3":"3C|MATH","6_6":"6A|MACO"}},{"s":"CLH","e":"Chan Lok Hin","c":"陳諾軒","b":{"1_2":"1B|IS","1_3":"3B|CL","1_4":"3B|CL","1_5":"6A,6B,6C,6D|ICT","1_6":"6A,6B,6C,6D|ICT","1_8":"2A|IS","2_3":"1B|IS","2_5":"3A|CL","2_6":"3A|CL","2_9":"2A|IS","3_3":"6A,6B,6C,6D|ICT","3_4":"2A|IS","3_5":"1B|IS","3_6":"1B|IS","4_3":"6A,6B,6C,6D|ICT","4_4":"6A,6B,6C,6D|ICT","4_5":"3C|CL","4_6":"3C|CL","4_9":"2A,2B,2C,2D|STEM","5_1":"2A|IS","5_3":"1B|IS","5_4":"1B|STEM","5_8":"6A,6B,6C,6D|ICT","6_1":"2A|IS","6_2":"2A|IS","6_4":"6A,6B,6C,6D|ICT","6_7":"1B|IS"}},{"s":"CLI","e":"Chan Lok In","c":"陳絡姸","b":{"1_7":"3A|Chem","1_8":"4A,4B,4C,4D|CHEM","1_9":"4A,4B,4C,4D|CHEM","2_1":"4A,4B,4C,4D|CHEM","2_5":"4A,4B,4C,4D|CHEM","2_6":"4A,4B,4C,4D|CHEM","2_7":"1A|IS","3_1":"4A,4B,4C,4D|CHEM","3_3":"1A|IS","3_4":"1A|IS","3_5":"4A,4B,4C,4D|CHEM","3_8":"3B|Chem","3_9":"3D|Chem","4_1":"4A,4B,4C,4D|CHEM","4_2":"4A,4B,4C,4D|CHEM","4_3":"1A|IS","4_5":"3A|Chem","4_9":"2A,2B,2C,2D|STEM","5_1":"4A,4B,4C,4D|CHEM","5_3":"1A|IS","5_4":"1A|STEM","5_5":"3D|Chem","5_8":"4A,4B,4C,4D|CHEM","5_9":"4A,4B,4C,4D|CHEM","6_1":"1A|IS","6_3":"4A,4B,4C,4D|CHEM","6_4":"4A,4B,4C,4D|CHEM","6_5":"3B|Chem"}},{"s":"COY","e":"Chan Oi Yan","c":"陳藹欣","b":{"1_3":"1D|ENG","1_5":"5A|ENG","1_6":"5A|ENG","1_7":"1D|ENG","1_9":"2C|ENG","2_1":"5A|ENG","2_2":"5A|ENG","2_7":"2C|ENG","2_8":"2C|ENG","3_2":"5A|ENG","3_3":"1D|ENG","3_4":"1D|ENG","3_6":"5A|ENG","3_7":"2C|ENG","4_1":"1D|ENG","4_3":"5A|ENG","4_5":"2C|ENG","4_6":"2C|ENG","5_3":"5A|ENG","5_4":"2C|ENG","5_5":"1D|ENG","5_6":"1D|ENG","6_1":"2C|ENG","6_5":"1D|ENG","6_7":"5A|ENG"}},{"s":"CSM","e":"Chan Shuk Man","c":"陳淑文","b":{"1_1":"3B|GEOG","1_4":"1C|GEOG","1_7":"3C|GEOG","2_1":"3A|GEOG","2_3":"1A|GEOG","2_5":"1D|GEOG","2_7":"5A,5B,5C,5D|GEOG","3_4":"3B|GEOG","3_5":"3C|GEOG","3_8":"5A,5B,5C,5D|GEOG","3_9":"5A,5B,5C,5D|GEOG","4_1":"5A,5B,5C,5D|GEOG","4_2":"1B|GEOG","4_4":"1A|GEOG","4_9":"3D|GEOG","5_1":"5A,5B,5C,5D|GEOG","5_2":"5A,5B,5C,5D|GEOG","5_5":"3A|GEOG","5_7":"1D|GEOG","5_9":"1C|GEOG","6_2":"1B|GEOG","6_5":"3D|GEOG","6_6":"5A,5B,5C,5D|GEOG"}},{"s":"CTM","e":"Chan Tsz Man","c":"陳子文","b":{"1_1":"4C,4D|PHY","1_2":"4C,4D|PHY","1_3":"5A,5B,5C,5D|PHY","1_4":"5A,5B,5C,5D|PHY","2_1":"5C,5D|PHY","2_2":"5C,5D|PHY","2_4":"4C,4D|PHY","2_8":"5A,5B,5C,5D|PHY","2_9":"5A,5B,5C,5D|PHY","3_6":"3C|Phy","3_7":"5C,5D|PHY","4_2":"5A,5B,5C,5D|PHY","4_5":"5C,5D|PHY","4_6":"5C,5D|PHY","4_7":"4C,4D|PHY","4_8":"4C,4D|PHY","4_9":"2A,2B,2C,2D|STEM","5_5":"5A,5B,5C,5D|PHY","5_7":"4C,4D|PHY","5_9":"5C,5D|PHY","6_1":"4C,4D|PHY","6_3":"5C,5D|PHY","6_5":"5A,5B,5C,5D|PHY","6_7":"3C|Phy"}},{"s":"CWY","e":"Chan Wing Yin","c":"陳穎賢","b":{"1_1":"6D|CHIN","1_6":"4A|CHIN","1_7":"3D|CHIN","1_8":"3D|CHIN","2_2":"4A|CHIN","2_7":"3D|CHIN","2_8":"6D|CHIN","2_9":"6D|CHIN","3_5":"3D|CHIN","3_6":"4A|CHIN","3_8":"6D|CHIN","3_9":"6D|CHIN","4_2":"3D|CHIN","4_5":"3D|CHIN","4_6":"6D|CHIN","4_7":"4A|CHIN","5_1":"6D|CHIN","5_5":"4A|CHIN","5_6":"4A|CHIN","5_9":"3D|CHIN","6_1":"4A|CHIN","6_2":"4A|CHIN","6_3":"3D|CHIN","6_4":"3D|CHIN","6_5":"6D|CHIN"}},{"s":"CYS","e":"Chan Yau Sing","c":"陳有成","b":{"1_4":"6D|MACO","1_7":"2A|MATH","2_3":"6A,6B,6C,6D|MAM2","2_4":"6A,6B,6C,6D|MAM2","2_5":"6D|MACO","2_7":"2A|MATH","3_5":"6D|MACO","3_6":"6D|MACO","3_9":"2A|MATH","4_3":"2A|MATH","4_4":"2A|MATH","4_9":"6D|MACO","5_2":"6D|MACO","5_5":"2A|MATH","5_7":"6A,6B,6C,6D|MAM2","5_8":"4A,4B,4C,4D|MAM2","5_9":"4A,4B,4C,4D|MAM2","6_1":"6A,6B,6C,6D|MAM2","6_2":"6A,6B,6C,6D|MAM2","6_3":"4A,4B,4C,4D|MAM2","6_4":"4A,4B,4C,4D|MAM2","6_6":"2A|MATH","6_7":"6D|MACO"}},{"s":"CYW","e":"Chan Yuk Wah","c":"陳玉華","b":{"1_1":"5D|CHIN","1_2":"5D|CHIN","1_5":"2D|CHIN","2_1":"2D|CHIN","2_2":"2D|CHIN","2_4":"5D|CHIN","2_7":"2D|CHIN","3_2":"5D|CHIN","3_7":"2D|CHIN","3_8":"2D|CHIN","4_6":"2D|CHIN","4_7":"5D|CHIN","4_8":"5D|CHIN","5_6":"5D|CHIN","5_9":"2D|CHIN","6_6":"2D|CHIN","6_7":"5D|CHIN"}},{"s":"CYC","e":"Chan Yung Cheung","c":"陳容彰","b":{"1_2":"2A|HCS","1_4":"2B|HCS","1_5":"1D|WVE","1_6":"1D|WVE","1_7":"2D|HCS","2_3":"2D|WVE","2_4":"2D|WVE","2_5":"2C|HCS","3_2":"2D|HCS","3_7":"2B|HCS","4_3":"1C|WVE","4_4":"1C|WVE","5_6":"2A|HCS","5_8":"2C|HCS","6_3":"2C|WVE","6_4":"2C|WVE"}},{"s":"CCW","e":"Cheung Chi Wai","c":"張志威","b":{"1_1":"5A|CHIN","1_2":"5A|CHIN","1_5":"2B|CHIN","1_6":"2B|CHIN","1_8":"1C|PTH","2_4":"5A|CHIN","2_5":"2B|CHIN","2_6":"2B|CHIN","3_2":"2C|PTH","3_3":"5A|CHIN","3_4":"5A|CHIN","3_5":"2B|CHIN","3_7":"2A|PTH","3_8":"2B|PTH","4_3":"2B|CHIN","4_5":"2B|CHIN","4_6":"3A|PTH","4_7":"5A|CHIN","4_8":"1D|PTH","5_2":"2B|CHIN","5_4":"5A|CHIN","5_5":"2D|PTH","5_7":"3D|PTH","5_8":"1A|PTH","6_1":"5A|CHIN","6_4":"2B|CHIN"}},{"s":"CHN","e":"Cheung Hoi Ning","c":"張凱寧","b":{"1_2":"5B|ENG","1_6":"2D|ENG","1_7":"4D|ENG","1_9":"5B|ENG","2_1":"5B|ENG","2_2":"5B|ENG","2_3":"4D|ENG","2_8":"2A|ENG","3_3":"4D|ENG","3_4":"4D|ENG","3_5":"5B|ENG","3_6":"5B|ENG","4_3":"4D|ENG","4_4":"4D|ENG","4_7":"5B|ENG","5_3":"5B|ENG","5_5":"4D|ENG","5_6":"4D|ENG","5_7":"2B|ENG","5_9":"2C|ENG","6_3":"5B|ENG","6_7":"4D|ENG"}},{"s":"CMB","e":"Cheung Man Bun","c":"張汶彬","b":{"1_3":"4A,4D|PE","1_4":"4A,4D|PE","1_7":"5B,5C|PE","1_8":"5B,5C|PE","2_1":"2A,2B|PE","2_2":"2A,2B|PE","2_3":"3C,3D|PE","2_4":"3C,3D|PE","3_3":"4B,4C|PE","3_4":"4B,4C|PE","3_7":"6B,6C|PE","3_8":"6B,6C|PE","4_1":"2C,2D|PE","4_2":"2C,2D|PE","4_7":"6A,6D|PE","4_8":"6A,6D|PE","5_1":"1A,1B|PE","5_2":"1A,1B|PE","5_7":"5A,5D|PE","5_8":"5A,5D|PE","6_1":"1C,1D|PE","6_2":"1C,1D|PE","6_3":"3A,3B|PE","6_4":"3A,3B|PE"}},{"s":"CPH","e":"Cheung Pak Ho","c":"張柏皓","b":{"1_1":"1D|IS","1_2":"1D|STEM","1_3":"2B|IS","1_4":"1D|MATH","1_6":"4B|MACO","2_2":"4B|MACO","2_3":"1D|IS","2_4":"1D|IS","2_6":"1D|MATH","2_8":"2B|IS","2_9":"2B|IS","3_1":"1D|IS","3_5":"1D|MATH","3_6":"2B|IS","3_7":"4B|MACO","4_3":"1D|IS","4_6":"4B|MACO","4_7":"1D|MATH","4_8":"2B|IS","4_9":"2A,2B,2C,2D|STEM","5_1":"2B|IS","5_3":"1D|MATH","5_4":"1D|MATH","5_6":"4B|MACO","6_1":"4B|MACO","6_2":"4B|MACO","6_6":"1D|IS","6_7":"1D|MATH"}},{"s":"CKC","e":"Chu Ki Cheong","c":"朱其昌","b":{"1_1":"3A|Phy","1_5":"6A,6B,6C,6D|PHY","1_6":"6A,6B,6C,6D|PHY","1_7":"6C,6D|PHY","1_8":"4A,4B,4C,4D|PHY","1_9":"4A,4B,4C,4D|PHY","2_5":"4A,4B,4C,4D|PHY","2_6":"4A,4B,4C,4D|PHY","2_7":"6C,6D|PHY","3_1":"6C,6D|PHY","3_2":"6C,6D|PHY","3_3":"6A,6B,6C,6D|PHY","3_5":"4A,4B,4C,4D|PHY","3_7":"3B|Phy","3_9":"3A|Phy","4_1":"4A,4B,4C,4D|PHY","4_3":"6A,6B,6C,6D|PHY","4_4":"6A,6B,6C,6D|PHY","4_6":"3D|Phy","4_9":"2A,2B,2C,2D|STEM","5_1":"4A,4B,4C,4D|PHY","5_2":"3B|Phy","5_3":"6C,6D|PHY","5_4":"6C,6D|PHY","5_8":"6A,6B,6C,6D|PHY","6_2":"3D|Phy","6_4":"6A,6B,6C,6D|PHY","6_6":"6C,6D|PHY"}},{"s":"CTK","e":"Chung Ting Kai","c":"鍾廷楷","b":{"1_9":"5A|MACO","2_3":"5A|MACO","3_1":"5A|MACO","4_5":"5A|MACO","4_6":"5A|MACO","5_9":"5A|MACO","6_2":"5A|MACO"}},{"s":"CYW1","e":"Chung Yuen Wah","c":"鍾沅樺","b":{"1_5":"1B|MATH","1_6":"1C|MATH","1_9":"5C|MACO","2_3":"5C|MACO","2_4":"1B|MATH","2_7":"1B|CL","2_8":"1B|CL","2_9":"1C|MATH","3_3":"1C|MATH","3_4":"5C|MACO","3_5":"1C|CL","3_6":"1C|CL","3_7":"1B|MATH","4_3":"5C|MACO","4_7":"1B|MATH","4_8":"1C|MATH","4_9":"1C|MATH","5_1":"1C|MATH","5_3":"5C|MACO","5_4":"5C|MACO","5_7":"1B|MATH","5_8":"1B|MATH","6_2":"5C|MACO","6_4":"1B|MATH","6_5":"1A|CL","6_6":"1A|CL","6_7":"1C|MATH"}},{"s":"FPY","e":"Fong Pik Yuk","c":"方璧鈺","b":{"1_1":"5C|CHIN","1_2":"5C|CHIN","1_4":"1B|PTH","1_5":"4B|CHIN","1_6":"1B|CHIN","2_4":"5C|CHIN","2_5":"1B|CHIN","2_6":"1B|CHIN","2_8":"4B|CHIN","2_9":"4B|CHIN","3_3":"5C|CHIN","3_6":"4B|CHIN","3_8":"1B|CHIN","3_9":"1B|CHIN","4_6":"1B|CHIN","4_7":"5C|CHIN","4_8":"5C|CHIN","4_9":"4B|CHIN","5_3":"4B|CHIN","5_4":"4B|CHIN","5_6":"5C|CHIN","5_9":"1B|CHIN","6_1":"5C|CHIN","6_3":"1B|CHIN","6_5":"4B|CHIN"}},{"s":"HYL","e":"Ho Yi Lok","c":"何懿洛","b":{"1_1":"2C|VA","1_2":"2C|VA","1_3":"3D|VA","1_4":"3D|VA","2_3":"3B|VA","2_4":"3B|VA","2_5":"5A,5B|VAD","2_6":"5A,5B|VAD","2_7":"4A,4B|VAD","3_1":"3A|VA","3_2":"3A|VA","3_7":"5A,5B|VAD","3_8":"4A,4B|VAD","3_9":"4A,4B|VAD","4_1":"2B|VA","4_2":"2B|VA","4_3":"4A,4B|VAD","4_4":"4A,4B|VAD","4_8":"5A,5B|VAD","4_9":"5A,5B|VAD","5_1":"2D|VA","5_2":"2D|VA","5_6":"5A,5B|VAD","5_7":"4A,4B|VAD","5_8":"2A|VA","5_9":"2A|VA","6_1":"3C|VA","6_2":"3C|VA","6_4":"5A,5B|VAD","6_6":"4A,4B|VAD"}},{"s":"HCM","e":"Hung Chun Man","c":"洪俊敏","b":{"1_1":"2D|RSC","1_2":"2D|RSC","1_5":"1C|MUS","1_7":"1A|MUS","2_3":"2B|MUS","2_9":"1B|MUS","3_1":"2A|MUS","3_4":"1C|MUS","3_5":"1A|MUS","3_6":"1D|MUS","3_8":"1D|RSC","3_9":"1D|RSC","4_1":"3D|MUS","4_2":"3B|MUS","4_5":"1A|RSC","4_6":"1A|RSC","4_8":"1B|RSC","4_9":"1B|RSC","5_2":"3A|MUS","5_4":"2D|MUS","5_5":"2C|MUS","5_6":"3C|MUS","5_7":"1C|RSC","5_8":"1C|RSC","6_1":"1B|MUS","6_4":"1D|MUS"}},{"s":"HNS","e":"Hussain Nibla Shabir","c":"妮娜","b":{"1_1":"1A|ENG","1_2":"1A|ENG","1_5":"3B|ENG","1_6":"2D|ENG","1_7":"2C|ENG","1_9":"5B|ENG","2_1":"1A|ENG","2_2":"1A|ENG","2_5":"5C|ENG","2_7":"2D|ENG","2_8":"2A|ENG","3_1":"5D|ENG","3_2":"5A|ENG","3_3":"2A|ENG","3_8":"1A|ENG","3_9":"3C|ENG","4_5":"2B|ENG","4_6":"3B|ENG","4_8":"1A|ENG","4_9":"1A|ENG","5_1":"3C|ENG","5_6":"1A|ENG","5_7":"2B|ENG","5_9":"2C|ENG","6_7":"1A|ENG"}},{"s":"KCH","e":"Kiang Chi Hong","c":"姜智康","b":{"1_1":"4C,4D|MAM1","1_2":"4C,4D|MAM1","1_6":"4D|MACO","1_9":"2D|MATH","2_2":"4D|MACO","2_7":"6C,6D|MAM1","2_9":"2D|MATH","3_1":"6C,6D|MAM1","3_2":"6C,6D|MAM1","3_5":"2D|MATH","3_6":"2D|MATH","3_7":"4D|MACO","3_8":"4D|MACO","4_4":"2D|MATH","4_5":"4D|MACO","4_7":"4C,4D|MAM1","4_8":"4C,4D|MAM1","5_2":"4D|MACO","5_3":"6C,6D|MAM1","5_4":"6C,6D|MAM1","5_7":"2D|MATH","5_8":"1D|CL","5_9":"1D|CL","6_2":"4D|MACO","6_4":"2D|MATH"}},{"s":"KLH","e":"Kong Lai Han","c":"江麗嫻","b":{"1_1":"1B|CES","1_3":"2A|HEC","1_4":"2A|HEC","1_5":"1D|HEC","1_6":"1D|HEC","2_3":"2D|HEC","2_4":"2D|HEC","2_5":"1A|HEC","2_6":"1A|HEC","2_7":"1D|CES","3_1":"5C|CS","3_2":"5C|CS","3_3":"1B|HEC","3_4":"1B|HEC","4_1":"1B|CES","4_2":"1D|CES","4_3":"1C|HEC","4_4":"1C|HEC","5_5":"2B|HEC","5_6":"2B|HEC","5_7":"5C|CS","6_3":"2C|HEC","6_4":"2C|HEC","6_7":"5C|CS"}},{"s":"KY","e":"Koo Yiu","c":"顧耀","b":{"1_3":"5A,5B,5C,5D|CHEM","1_4":"5A,5B,5C,5D|CHEM","1_5":"6A,6B,6C,6D|CHEM","1_6":"6A,6B,6C,6D|CHEM","1_9":"6A,6B,6C,6D|CHEM","2_1":"3C|Chem","2_3":"6A,6B,6C,6D|CHEM","2_4":"6A,6B,6C,6D|CHEM","2_7":"5A,5B,5C,5D|CHEM","2_8":"5A,5B,5C,5D|CHEM","2_9":"5A,5B,5C,5D|CHEM","3_3":"6A,6B,6C,6D|CHEM","3_4":"6A,6B,6C,6D|CHEM","3_8":"5A,5B,5C,5D|CHEM","3_9":"5A,5B,5C,5D|CHEM","4_1":"5A,5B,5C,5D|CHEM","4_2":"5A,5B,5C,5D|CHEM","4_3":"6A,6B,6C,6D|CHEM","4_4":"6A,6B,6C,6D|CHEM","4_9":"3C|Chem","5_1":"5A,5B,5C,5D|CHEM","5_2":"5A,5B,5C,5D|CHEM","5_5":"5A,5B,5C,5D|CHEM","5_7":"6A,6B,6C,6D|CHEM","5_8":"6A,6B,6C,6D|CHEM","6_1":"6A,6B,6C,6D|CHEM","6_2":"6A,6B,6C,6D|CHEM","6_4":"6A,6B,6C,6D|CHEM","6_5":"5A,5B,5C,5D|CHEM","6_6":"5A,5B,5C,5D|CHEM"}},{"s":"KPP","e":"Kwok Pui Pui","c":"郭佩佩","b":{"1_1":"6C|ENG","1_3":"6D|ENG","1_4":"6A|ENG","1_8":"5D|ENG","1_9":"5D|ENG","2_5":"5D|ENG","2_6":"5D|ENG","3_1":"5D|ENG","3_6":"5D|ENG","3_9":"3C|ENG","4_1":"6B|ENG","4_2":"5A,5B,5C,5D|ENG","4_4":"5D|ENG","4_6":"3B|ENG","4_8":"3D|ENG","4_9":"3A|ENG","5_3":"5D|ENG","5_6":"5A,5B|ENG","5_9":"5C,5D|ENG","6_4":"5D|ENG","6_6":"5A,5B,5C,5D|ENG"}},{"s":"LKY","e":"Lam Ka Yan","c":"林嘉欣","b":{"1_3":"2D|GEOG","1_8":"2C|GEOG","1_9":"6A,6B,6C,6D|GEOG","2_1":"4A,4B,4C,4D|GEOG","2_3":"6A,6B,6C,6D|GEOG","2_4":"6A,6B,6C,6D|GEOG","3_1":"4A,4B,4C,4D|GEOG","3_2":"2A|GEOG","3_3":"2C|GEOG","3_4":"6A,6B,6C,6D|GEOG","3_7":"4C|CLD","3_8":"4C|CS","4_2":"4A,4B,4C,4D|GEOG","4_7":"2B|GEOG","5_2":"2A|GEOG","5_6":"2D|GEOG","5_7":"6A,6B,6C,6D|GEOG","5_8":"4A,4B,4C,4D|GEOG","5_9":"4A,4B,4C,4D|GEOG","6_1":"6A,6B,6C,6D|GEOG","6_2":"6A,6B,6C,6D|GEOG","6_3":"4A,4B,4C,4D|GEOG","6_4":"4A,4B,4C,4D|GEOG","6_7":"2B|GEOG"}},{"s":"LMP","e":"Lam Mei Po","c":"林美寶","b":{"1_2":"3B|MATH","1_3":"6B|MACO","1_5":"3A|MATH","1_6":"3A|MATH","1_8":"2B|MATH","1_9":"2B|MATH","2_3":"3A|MATH","2_5":"6B|MACO","2_7":"2B|MATH","2_8":"3B|MATH","2_9":"3B|MATH","3_1":"2B|MATH","3_3":"3B|MATH","3_4":"3A|MATH","3_5":"6B|MACO","4_3":"3A|MATH","4_4":"2B|MATH","4_8":"3B|MATH","4_9":"6B|MACO","5_1":"6B|MACO","5_2":"6B|MACO","5_4":"3A|MATH","5_6":"3B|MATH","5_9":"2B|MATH","6_1":"3B|MATH","6_2":"3A|MATH","6_3":"2B|MATH","6_6":"6B|MACO"}},{"s":"LON","e":"Lam On Nei","c":"林安妮","b":{"1_5":"1A|VA","1_6":"1A|VA","1_7":"6A,6B|VAD","1_8":"1B|VA","1_9":"1B|VA","2_1":"1C|VA","2_2":"1C|VA","2_8":"6A,6B|VAD","2_9":"6A,6B|VAD","3_3":"1B|WVE","3_4":"1B|WVE","3_6":"6A,6B|VAD","4_5":"1D|VA","4_6":"1D|VA","5_3":"6A,6B|VAD","5_4":"6A,6B|VAD","5_5":"2B|WVE","5_6":"2B|WVE","6_5":"6A,6B|VAD"}},{"s":"LSY","e":"Lam Shuk Ying","c":"林淑瑩","b":{"1_3":"3C|ENG","1_4":"3C|ENG","1_5":"4A|ENG","1_7":"4A|ENG","2_8":"4A|ENG","2_9":"3C|ENG","3_3":"4A|ENG","3_4":"4A|ENG","3_8":"3C|ENG","4_3":"3C|ENG","4_4":"3C|ENG","4_8":"4A|ENG","4_9":"4A|ENG","5_4":"4A|ENG","5_5":"3C|ENG","6_4":"3C|ENG","6_7":"4A|ENG"}},{"s":"LWL","e":"Lam Wai Ling","c":"林偉玲","b":{"1_1":"6A|CHIN","1_2":"6A|CHIN","1_5":"3B|CHIN","1_8":"3B|CHIN","1_9":"3A|CHIN","2_2":"3B|CHIN","2_7":"6A|CHIN","2_9":"3A|CHIN","3_1":"6A|CHIN","3_2":"6A|CHIN","3_5":"3B|CHIN","3_6":"3B|CHIN","3_7":"3A|CHIN","3_8":"3A|CHIN","4_1":"3A|CHIN","4_2":"3A|CHIN","4_5":"6A|CHIN","4_9":"3B|CHIN","5_2":"6A|CHIN","5_3":"3B|CHIN","5_4":"3B|CHIN","5_6":"3A|CHIN","5_7":"3A|CHIN","6_1":"3A|CHIN","6_6":"3B|CHIN","6_7":"6A|CHIN"}},{"s":"LWM","e":"Lam Wai Man","c":"林偉文","b":{"1_1":"1C|IS","1_2":"1C|STEM","1_4":"2D|IS","1_6":"2C|IS","1_8":"1A|CES","1_9":"1C|CES","2_4":"2C|IS","2_5":"2D|IS","2_6":"2D|IS","2_8":"1C|IS","3_7":"1C|IS","3_8":"1C|IS","3_9":"2D|IS","4_2":"1A|CES","4_4":"2C|IS","4_5":"2D|IS","4_9":"2A,2B,2C,2D|STEM","5_1":"2C|IS","5_2":"2C|IS","5_3":"1C|IS","5_4":"1C|CES","6_5":"2D|IS","6_6":"1C|IS","6_7":"2C|IS"}},{"s":"LNM","e":"Lau Nga Man","c":"劉雅雯","b":{"1_2":"6D|RSC","1_3":"1A|CHIN","1_4":"1A|CHIN","1_5":"4D|CHIN","1_8":"6B|RSC","2_7":"4D|CHIN","2_8":"1A|CHIN","2_9":"1A|CHIN","3_2":"4D|CHIN","3_5":"5D|RSC","3_6":"4D|RSC","3_7":"1A|CHIN","4_1":"1A|CHIN","4_2":"6C|RSC","4_4":"5C|RSC","4_5":"4C|RSC","4_6":"6A|RSC","4_9":"4D|CHIN","5_3":"4D|CHIN","5_4":"4D|CHIN","5_7":"1A|CHIN","6_3":"5A|RSC","6_4":"1A|CHIN","6_5":"4D|CHIN","6_6":"4D|CHIN","6_7":"5B|RSC"}},{"s":"LWK1","e":"Lau Wing Kwan","c":"劉永坤","b":{"1_5":"3C|CES","1_6":"3D|CES","1_7":"6A,6B|Acc","1_8":"3A|CES","2_1":"3B|CES","2_5":"5A,5B|Acc","2_6":"5A,5B|Acc","2_7":"4A,4B|Acc","2_8":"6A,6B|Acc","2_9":"6A,6B|Acc","3_3":"3A|CES","3_6":"6A,6B|Acc","3_7":"5A,5B|Acc","3_8":"4A,4B|Acc","3_9":"4A,4B|Acc","4_3":"4A,4B|Acc","4_4":"4A,4B|Acc","4_7":"3D|CES","4_8":"5A,5B|Acc","4_9":"5A,5B|Acc","5_1":"3B|CES","5_3":"6A,6B|Acc","5_4":"6A,6B|Acc","5_6":"5A,5B|Acc","5_7":"4A,4B|Acc","5_8":"3C|CES","6_4":"5A,5B|Acc","6_5":"6A,6B|Acc","6_6":"4A,4B|Acc"}},{"s":"LPL","e":"Leung Pui Ling","c":"梁佩玲","b":{"1_1":"6C|ENG","1_3":"4C|ENG","1_4":"4C|ENG","1_8":"6C|ENG","2_2":"4C|ENG","2_5":"6C|ENG","2_6":"6C|ENG","2_9":"4C|ENG","3_4":"6A,6B,6C,6D|ENG","3_6":"4C|ENG","3_9":"6C|ENG","4_7":"6C|ENG","4_8":"6C|ENG","4_9":"4C|ENG","5_3":"4C|ENG","5_4":"4C|ENG","5_8":"6A,6B,6C,6D|ENG","5_9":"6C|ENG","6_2":"4C|ENG","6_3":"6C|ENG","6_5":"6A,6B|ENG","6_6":"6C,6D|ENG"}},{"s":"LCS","e":"Li Chi Shing","c":"李志誠","b":{"1_1":"2B|CL","1_2":"2B|CL","1_3":"5A,5B,5C,5D|ICT","1_4":"5A,5B,5C,5D|ICT","1_8":"4A,4B,4C,4D|ICT","1_9":"4A,4B,4C,4D|ICT","2_1":"2C|CL","2_2":"2C|CL","2_5":"4A,4B,4C,4D|ICT","2_6":"4A,4B,4C,4D|ICT","2_8":"5A,5B,5C,5D|ICT","2_9":"5A,5B,5C,5D|ICT","3_5":"4A,4B,4C,4D|ICT","3_7":"3D|CL","3_8":"3D|CL","4_1":"4A,4B,4C,4D|ICT","4_2":"5A,5B,5C,5D|ICT","4_7":"2A|CL","4_8":"2A|CL","4_9":"2A,2B,2C,2D|STEM","5_1":"4A,4B,4C,4D|ICT","5_5":"5A,5B,5C,5D|ICT","6_1":"2D|CL","6_2":"2D|CL","6_5":"5A,5B,5C,5D|ICT"}},{"s":"LS","e":"Li Silin","c":"李斯琳","b":{"1_1":"6B|ENG","1_2":"6B|ENG","1_5":"2A|ENG","1_8":"2D|ENG","2_1":"6B|ENG","2_2":"6B|ENG","2_3":"2A|ENG","2_4":"2A|ENG","2_8":"2D|ENG","3_3":"2D|ENG","3_4":"2D|ENG","3_6":"2A|ENG","3_9":"6B|ENG","4_1":"6B|ENG","4_2":"6B|ENG","4_5":"2A|ENG","4_6":"2A|ENG","4_7":"2D|ENG","4_8":"2D|ENG","5_3":"2D|ENG","5_4":"2A|ENG","5_6":"6B|ENG","6_3":"6B|ENG","6_5":"2A|ENG","6_7":"2D|ENG"}},{"s":"LCW","e":"Lo Chiu Wing","c":"盧昭榮","b":{"1_1":"4B|ENG","1_2":"4B|ENG","1_4":"6A|ENG","1_8":"6A|ENG","1_9":"3B|ENG","2_1":"6A|ENG","2_2":"6A|ENG","2_3":"4B|ENG","2_4":"4B|ENG","2_6":"3B|ENG","3_2":"4B|ENG","3_7":"6A|ENG","3_9":"3B|ENG","4_1":"6A|ENG","4_2":"6A|ENG","4_3":"3B|ENG","4_4":"3B|ENG","4_5":"4B|ENG","4_8":"4B|ENG","5_5":"4B|ENG","5_7":"3B|ENG","5_8":"3B|ENG","5_9":"6A|ENG","6_2":"3B|ENG","6_3":"6A|ENG","6_7":"4B|ENG"}},{"s":"LYF","e":"Lui Yu Fong","c":"呂渝方","b":{"1_3":"4A,4D|PE","1_4":"4A,4D|PE","1_7":"5B,5C|PE","1_8":"5B,5C|PE","2_1":"2A,2B|PE","2_2":"2A,2B|PE","2_3":"3C,3D|PE","2_4":"3C,3D|PE","3_3":"4B,4C|PE","3_4":"4B,4C|PE","3_7":"6B,6C|PE","3_8":"6B,6C|PE","4_1":"2C,2D|PE","4_2":"2C,2D|PE","4_7":"6A,6D|PE","4_8":"6A,6D|PE","5_1":"1A,1B|PE","5_2":"1A,1B|PE","5_7":"5A,5D|PE","5_8":"5A,5D|PE","6_1":"1C,1D|PE","6_2":"1C,1D|PE","6_3":"3A,3B|PE","6_4":"3A,3B|PE"}},{"s":"MSM","e":"Mak Shuk Man","c":"麥淑雯","b":{"1_3":"5A,5B,5C,5D|CHIS","1_4":"5A,5B,5C,5D|CHIS","1_5":"6A,6B,6C,6D|CHIS","1_6":"6A,6B,6C,6D|CHIS","1_8":"4A,4B,4C,4D|CHIS","1_9":"4A,4B,4C,4D|CHIS","2_4":"3A|CHIS","2_5":"4A,4B,4C,4D|CHIS","2_6":"4A,4B,4C,4D|CHIS","2_8":"5A,5B,5C,5D|CHIS","2_9":"5A,5B,5C,5D|CHIS","3_2":"3B|CHIS","3_3":"6A,6B,6C,6D|CHIS","3_5":"4A,4B,4C,4D|CHIS","4_1":"4A,4B,4C,4D|CHIS","4_2":"5A,5B,5C,5D|CHIS","4_3":"6A,6B,6C,6D|CHIS","4_4":"6A,6B,6C,6D|CHIS","5_1":"4A,4B,4C,4D|CHIS","5_3":"3A|CHIS","5_5":"5A,5B,5C,5D|CHIS","5_8":"6A,6B,6C,6D|CHIS","5_9":"3B|CHIS","6_4":"6A,6B,6C,6D|CHIS","6_5":"5A,5B,5C,5D|CHIS"}},{"s":"MSY","e":"Mak Sin Yee","c":"麥倩儀","b":{"1_1":"3D|ENG","1_2":"3D|ENG","1_3":"6D|ENG","1_4":"3A|ENG","1_8":"6D|ENG","2_2":"3D|ENG","2_6":"6D|ENG","2_7":"3A|ENG","2_8":"4D|CLD","2_9":"4D|CS","3_1":"3D|ENG","3_2":"3D|ENG","3_5":"3A|ENG","3_6":"3A|ENG","3_7":"6D|ENG","4_1":"6D|ENG","4_2":"6D|ENG","4_3":"3D|ENG","4_4":"3A|ENG","5_1":"3A|ENG","5_2":"3D|ENG","5_5":"6D|ENG","5_6":"6D|ENG","6_3":"6D|ENG","6_5":"3A|ENG","6_6":"3A|ENG","6_7":"3D|ENG"}},{"s":"MTH","e":"Mak Tsui Han","c":"麥翠嫻","b":{"1_3":"1C|ENG","1_5":"5C|ENG","1_6":"5C|ENG","1_7":"1B|ENG","2_1":"1B|ENG","2_3":"1C|ENG","2_4":"1C|ENG","2_5":"5C|ENG","2_6":"5C|ENG","3_2":"1B|ENG","3_5":"5C|ENG","3_6":"5C|ENG","3_9":"1C|ENG","4_3":"1B|ENG","4_4":"1B|ENG","4_5":"1C|ENG","4_6":"1C|ENG","4_9":"5C|ENG","5_5":"1C|ENG","5_6":"1B|ENG","5_8":"5C|ENG","6_3":"1C|ENG","6_4":"5C|ENG","6_5":"1B|ENG","6_6":"1B|ENG"}},{"s":"NOY","e":"Ng Oi Yan","c":"吳靄茵","b":{"1_1":"4C,4D|BIO","1_2":"4C,4D|BIO","1_5":"3D|Bio","2_1":"4A,4B,4C,4D|BIO","2_4":"4C,4D|BIO","2_5":"1A|WVE","2_6":"1A|WVE","2_7":"5A,5B,5C,5D|BIO","3_1":"4A,4B,4C,4D|BIO","3_3":"3D|Bio","3_4":"3C|Bio","3_8":"5A,5B,5C,5D|BIO","3_9":"5A,5B,5C,5D|BIO","4_1":"5A,5B,5C,5D|BIO","4_2":"4A,4B,4C,4D|BIO","4_7":"4C,4D|BIO","4_8":"4C,4D|BIO","5_1":"5A,5B,5C,5D|BIO","5_2":"5A,5B,5C,5D|BIO","5_7":"4C,4D|BIO","5_8":"4A,4B,4C,4D|BIO","5_9":"4A,4B,4C,4D|BIO","6_1":"4C,4D|BIO","6_3":"4A,4B,4C,4D|BIO","6_4":"4A,4B,4C,4D|BIO","6_5":"3C|Bio","6_6":"5A,5B,5C,5D|BIO"}},{"s":"SWP","e":"Sha Wai Pak","c":"沙偉栢","b":{"1_3":"5A,5B,5C,5D|HIST","1_4":"5A,5B,5C,5D|HIST","1_8":"3C|HCS","2_2":"3A|HCS","2_5":"5A,5B|HIST","2_6":"5A,5B|HIST","2_7":"4A,4B|HIST","2_8":"5A,5B,5C,5D|HIST","2_9":"5A,5B,5C,5D|HIST","3_6":"3D|HCS","3_7":"5A,5B|HIST","3_8":"4A,4B|HIST","3_9":"4A,4B|HIST","4_1":"3B|HCS","4_2":"5A,5B,5C,5D|HIST","4_3":"4A,4B|HIST","4_4":"4A,4B|HIST","4_8":"5A,5B|HIST","4_9":"5A,5B|HIST","5_3":"3D|HCS","5_4":"3C|HCS","5_5":"5A,5B,5C,5D|HIST","5_6":"5A,5B|HIST","5_7":"4A,4B|HIST","5_9":"3A|HCS","6_4":"5A,5B|HIST","6_5":"5A,5B,5C,5D|HIST","6_6":"4A,4B|HIST","6_7":"3B|HCS"}},{"s":"SCL","e":"Suen Chun Long","c":"孫雋朗","b":{"1_1":"3C|RSC","1_2":"3A|RSC","1_6":"3B|RSC","1_7":"4B|RSC","1_9":"2A|CHIS","2_2":"1B|CHIS","2_6":"2C|CHIS","2_7":"1C|CHIS","2_9":"1D|CHIS","3_1":"5B|CS","3_2":"5B|CS","3_5":"2A|CHIS","3_6":"1A|CHIS","3_8":"2C|RSC","3_9":"2C|RSC","4_4":"1D|CHIS","4_5":"5B|CS","4_6":"4A|RSC","4_7":"1C|CHIS","5_4":"5B|CS","5_5":"1B|CHIS","5_6":"2C|CHIS","5_8":"3D|RSC","5_9":"1A|CHIS","6_3":"2A|RSC","6_4":"2A|RSC","6_5":"2B|RSC","6_6":"2B|RSC"}},{"s":"TWF","e":"Toa Wai Fook","c":"陶偉福","b":{"1_1":"4A|MACO","1_2":"4A|MACO","1_3":"2C|MATH","1_4":"2C|MATH","1_7":"4C|MACO","1_9":"3D|MATH","2_3":"2C|MATH","2_5":"3D|MATH","2_6":"3D|MATH","2_7":"4C|MACO","2_8":"4C|MACO","2_9":"4A|MACO","3_1":"2C|MATH","3_2":"4C|MACO","3_4":"3D|MATH","3_7":"4A|MACO","4_3":"2C|MATH","4_4":"3D|MATH","4_5":"4A|MACO","4_6":"4C|MACO","5_2":"4A|MACO","5_4":"3D|MATH","5_5":"4C|MACO","5_7":"2C|MATH","6_1":"3D|MATH","6_2":"2C|MATH","6_5":"4A|MACO","6_6":"4C|MACO"}},{"s":"TMF","e":"Tsao Man Fai","c":"曹文翬","b":{"1_3":"4B|CLD","1_4":"4B|CS","1_5":"5D|CS","1_6":"5D|CS","2_1":"6C|CS","2_2":"6C|CS","2_3":"4A|CLD","2_4":"4A|CS","2_6":"6A|CS","2_8":"3D|DVE","3_1":"3B|DVE","3_2":"4A|CS","3_8":"6A|CS","3_9":"6A|CS","4_1":"6C|CS","4_2":"3C|DVE","4_7":"4B|CS","4_9":"5D|CS","5_1":"6A|CS","5_2":"4B|CS","5_3":"4A|CS","5_6":"6C|CS","5_8":"3A|DVE","6_1":"5D|CS"}},{"s":"TYL","e":"Tsoi Yiu Lam","c":"蔡堯琳","b":{"1_3":"4B|CLD","1_4":"4B|CS","1_5":"2C|CHIN","1_6":"2A|CHIN","1_7":"2C|CHIN","2_1":"3D|CHIS","2_2":"3C|CHIS","2_5":"2A|CHIN","2_6":"2A|CHIN","2_9":"2C|CHIN","3_1":"2D|CHIS","3_3":"2A|CHIN","3_5":"2C|CHIN","3_6":"2C|CHIN","3_8":"2A|CHIN","3_9":"2B|CHIS","4_1":"2A|CHIN","4_2":"2A|CHIN","4_7":"2C|CHIN","4_8":"2C|CHIN","5_1":"3D|CHIS","5_3":"2C|CHIN","5_4":"2B|CHIS","5_7":"2A|CHIN","5_8":"2D|CHIS","5_9":"3C|CHIS","6_6":"2C|CHIN","6_7":"2A|CHIN"}},{"s":"WKT","e":"Wong Kwok Tai","c":"黃國大","b":{"1_1":"2A|CES","1_7":"5A|CS","1_8":"5A|CS","2_1":"6D|CS","2_2":"6D|CS","2_7":"6B|CS","2_8":"4D|CLD","2_9":"4D|CS","3_2":"2B|CES","3_4":"2C|CES","3_5":"5A|CS","3_7":"4C|CLD","3_8":"4C|CS","3_9":"4D|CS","4_3":"2D|CES","4_4":"5A|CS","4_5":"6D|CS","4_6":"4D|CS","4_7":"6B|CS","4_8":"6B|CS","5_3":"2A|CES","5_5":"6B|CS","5_6":"4C|CS","5_8":"2B|CES","5_9":"6D|CS","6_3":"2D|CES","6_5":"2C|CES","6_7":"4C|CS"}},{"s":"WMH","e":"Wong Man Han","c":"王敏嫻","b":{"2_1":"4A,4B,4C,4D|CLIT","3_1":"4A,4B,4C,4D|CLIT","4_2":"4A,4B,4C,4D|CLIT","5_8":"4A,4B,4C,4D|CLIT","5_9":"4A,4B,4C,4D|CLIT","6_3":"4A,4B,4C,4D|CLIT","6_4":"4A,4B,4C,4D|CLIT"}},{"s":"WSF","e":"Wong Shing Fung","c":"黃丞鋒","b":{"1_3":"5A,5B,5C,5D|ECON","1_4":"5A,5B,5C,5D|ECON","1_5":"6A,6B,6C,6D|ECON","1_6":"6A,6B,6C,6D|ECON","1_8":"4A,4B,4C,4D|ECON","1_9":"4A,4B,4C,4D|ECON","2_3":"4A|CLD","2_4":"4A|CS","2_5":"4A,4B,4C,4D|ECON","2_6":"4A,4B,4C,4D|ECON","2_8":"5A,5B,5C,5D|ECON","2_9":"5A,5B,5C,5D|ECON","3_3":"6A,6B,6C,6D|ECON","3_5":"4A,4B,4C,4D|ECON","4_1":"4A,4B,4C,4D|ECON","4_2":"5A,5B,5C,5D|ECON","4_3":"6A,6B,6C,6D|ECON","4_4":"6A,6B,6C,6D|ECON","4_5":"3B|EPA","5_1":"4A,4B,4C,4D|ECON","5_2":"3C|EPA","5_5":"5A,5B,5C,5D|ECON","5_8":"6A,6B,6C,6D|ECON","6_4":"6A,6B,6C,6D|ECON","6_5":"5A,5B,5C,5D|ECON","6_6":"3D|EPA","6_7":"3A|EPA"}},{"s":"WSY","e":"Wong Suk Yin","c":"王淑賢","b":{"1_5":"5B|CHIN","1_6":"5B|CHIN","1_7":"1C|CHIN","1_8":"1D|CHIN","1_9":"1D|CHIN","2_1":"1D|CHIN","2_2":"1D|CHIN","2_3":"5B|CHIN","2_5":"1C|CHIN","2_6":"1C|CHIN","3_1":"1C|CHIN","3_2":"1D|CHIN","3_3":"5B|CHIN","4_1":"1C|CHIN","4_2":"1C|CHIN","4_6":"5B|CHIN","4_9":"1D|CHIN","5_1":"1D|CHIN","5_2":"1C|CHIN","5_8":"5B|CHIN","5_9":"5B|CHIN","6_1":"5B|CHIN","6_3":"1D|CHIN","6_4":"1C|CHIN"}},{"s":"YHM","e":"Yao Hing Man","c":"姚慶萬","b":{"1_2":"3C|CHIN","1_4":"6B|CHIN","1_9":"6A,6B,6C,6D|CLIT","2_3":"6A,6B,6C,6D|CLIT","2_4":"6A,6B,6C,6D|CLIT","2_6":"6B|CHIN","2_7":"5A,5B,5C,5D|CLIT","2_8":"3A|CHIN","2_9":"3D|CHIN","3_1":"6B|CHIN","3_2":"6B|CHIN","3_4":"6A,6B,6C,6D|CLIT","3_8":"5A,5B,5C,5D|CLIT","3_9":"5A,5B,5C,5D|CLIT","4_1":"5A,5B,5C,5D|CLIT","4_5":"6B|CHIN","4_6":"6B|CHIN","4_7":"3B|CHIN","5_1":"5A,5B,5C,5D|CLIT","5_2":"5A,5B,5C,5D|CLIT","5_7":"6A,6B,6C,6D|CLIT","5_9":"6B|CHIN","6_1":"6A,6B,6C,6D|CLIT","6_2":"6A,6B,6C,6D|CLIT","6_6":"5A,5B,5C,5D|CLIT","6_7":"6B|CHIN"}},{"s":"YKM","e":"Yip Kin Man","c":"葉健文","b":{"1_3":"1B|HCS","1_5":"6A,6B,6C,6D|HIST","1_6":"6A,6B,6C,6D|HIST","1_7":"6A,6B|HIST","1_8":"4A,4B,4C,4D|HIST","1_9":"4A,4B,4C,4D|HIST","2_5":"4A,4B,4C,4D|HIST","2_6":"4A,4B,4C,4D|HIST","2_8":"6A,6B|HIST","2_9":"6A,6B|HIST","3_2":"1C|HCS","3_3":"6A,6B,6C,6D|HIST","3_5":"4A,4B,4C,4D|HIST","3_6":"6A,6B|HIST","3_7":"1D|HCS","3_9":"1A|HCS","4_1":"4A,4B,4C,4D|HIST","4_3":"6A,6B,6C,6D|HIST","4_4":"6A,6B,6C,6D|HIST","4_5":"1B|HCS","5_1":"4A,4B,4C,4D|HIST","5_2":"1D|HCS","5_3":"6A,6B|HIST","5_4":"6A,6B|HIST","5_6":"1C|HCS","5_8":"6A,6B,6C,6D|HIST","6_2":"1A|HCS","6_4":"6A,6B,6C,6D|HIST","6_5":"6A,6B|HIST"}},{"s":"YSP","e":"Yu Siu Ping","c":"余小冰","b":{"1_3":"6C|CHIN","1_4":"6C|CHIN","1_5":"4C|CHIN","1_6":"4C|CHIN","1_9":"3C|CHIN","2_3":"4C|CHIN","2_5":"3C|CHIN","2_6":"3C|CHIN","2_7":"3B|PTH","2_8":"6C|CHIN","3_1":"3C|PTH","3_6":"6C|CHIN","3_7":"3C|CHIN","3_9":"4C|CHIN","4_3":"4C|CHIN","4_4":"4C|CHIN","4_5":"6C|CHIN","4_6":"6C|CHIN","4_7":"3C|CHIN","4_8":"3C|CHIN","5_1":"3C|CHIN","5_2":"4C|CHIN","5_5":"6C|CHIN","5_7":"3C|CHIN","6_5":"4C|CHIN","6_6":"3C|CHIN","6_7":"6C|CHIN"}}];
 
-// ==================== APP LOGIC ====================
-let selectedTeachers = [];
+var selected = [];
 
 function isFree(teacher, day, period) {
-  return !teacher.b[day + '_' + period];
+  var key = day + "_" + period;
+  return !teacher.b[key];
 }
 
-function getBusyClass(teacher, day, period) {
-  return teacher.b[day + '_' + period] || null;
+function getBusyInfo(teacher, day, period) {
+  var key = day + "_" + period;
+  var val = teacher.b[key];
+  if (!val) { return null; }
+  var parts = val.split("|");
+  return { cls: parts[0], sub: parts[1] || "" };
 }
 
-// ==================== TABS ====================
-document.querySelectorAll('.tab').forEach(function(tab) {
-  tab.addEventListener('click', function() {
-    document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
-    document.querySelectorAll('.tab-content').forEach(function(tc) { tc.classList.remove('active'); });
-    tab.classList.add('active');
-    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
-  });
-});
-
-// ==================== TEACHER SEARCH ====================
-var searchInput = document.getElementById('teacherSearch');
-var dropdown = document.getElementById('teacherDropdown');
-var chipsContainer = document.getElementById('selectedChips');
-
-searchInput.addEventListener('focus', showDropdown);
-searchInput.addEventListener('input', showDropdown);
-
-document.addEventListener('click', function(e) {
-  if (!e.target.closest('.teacher-select-wrapper')) {
-    dropdown.classList.remove('show');
+function formatBusy(teacher, day, period) {
+  var info = getBusyInfo(teacher, day, period);
+  if (!info) { return ""; }
+  if (info.sub) {
+    return teacher.s + ": " + info.cls + " (" + info.sub + ")";
   }
-});
+  return teacher.s + ": " + info.cls;
+}
+
+function switchTab(idx) {
+  var tabs = document.querySelectorAll(".tab");
+  var panels = document.querySelectorAll(".panel");
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].classList.toggle("active", i === idx);
+    panels[i].classList.toggle("active", i === idx);
+  }
+}
 
 function showDropdown() {
-  var query = searchInput.value.toLowerCase().trim();
-  var filtered = TEACHERS.filter(function(t) {
-    if (selectedTeachers.indexOf(t.s) !== -1) return false;
-    if (!query) return true;
+  var input = document.getElementById("teacherSearch");
+  var dropdown = document.getElementById("dropdown");
+  var query = input.value.trim().toLowerCase();
+  if (!query) { dropdown.classList.remove("show"); return; }
+  var matches = DATA.filter(function(t) {
+    if (selected.indexOf(t.s) !== -1) { return false; }
     return t.s.toLowerCase().indexOf(query) !== -1 ||
            t.e.toLowerCase().indexOf(query) !== -1 ||
            t.c.indexOf(query) !== -1;
-  });
-
-  if (filtered.length === 0) {
-    dropdown.innerHTML = '<div class="dropdown-item"><span class="name">No match</span></div>';
-  } else {
-    dropdown.innerHTML = filtered.map(function(t) {
-      return '<div class="dropdown-item" data-short="' + t.s + '">' +
-        '<span class="short">' + t.s + '</span>' +
-        '<span class="name">' + t.e + (t.c ? ' ' + t.c : '') + '</span></div>';
-    }).join('');
+  }).slice(0, 10);
+  if (matches.length === 0) { dropdown.classList.remove("show"); return; }
+  var html = "";
+  for (var i = 0; i < matches.length; i++) {
+    var t = matches[i];
+    var nameStr = t.e + (t.c ? " " + t.c : "");
+    html += "<div class=\"dropdown-item\" onclick=\"addTeacher('" + t.s + "')\"><span class=\"short\">" + t.s + "</span><span class=\"name\">" + nameStr + "</span></div>";
   }
-
-  dropdown.classList.add('show');
-  dropdown.querySelectorAll('.dropdown-item[data-short]').forEach(function(item) {
-    item.addEventListener('click', function() {
-      addTeacher(item.dataset.short);
-    });
-  });
+  dropdown.innerHTML = html;
+  dropdown.classList.add("show");
 }
 
 function addTeacher(shortName) {
-  if (selectedTeachers.indexOf(shortName) !== -1) return;
-  selectedTeachers.push(shortName);
-  searchInput.value = '';
-  dropdown.classList.remove('show');
+  if (selected.indexOf(shortName) !== -1) { return; }
+  selected.push(shortName);
+  document.getElementById("teacherSearch").value = "";
+  document.getElementById("dropdown").classList.remove("show");
   renderChips();
   updateCommonFree();
 }
 
 function removeTeacher(shortName) {
-  selectedTeachers = selectedTeachers.filter(function(s) { return s !== shortName; });
+  selected = selected.filter(function(s) { return s !== shortName; });
   renderChips();
   updateCommonFree();
 }
 
 function renderChips() {
-  chipsContainer.innerHTML = selectedTeachers.map(function(s) {
-    var t = TEACHERS.find(function(x) { return x.s === s; });
-    return '<div class="chip"><span>' + t.s + '</span><span class="remove" onclick="removeTeacher(\'' + t.s + '\')">&times;</span></div>';
-  }).join('');
+  var container = document.getElementById("chips");
+  var html = "";
+  for (var i = 0; i < selected.length; i++) {
+    var t = DATA.filter(function(x) { return x.s === selected[i]; })[0];
+    var label = t.s + (t.c ? " " + t.c : "");
+    html += "<div class=\"chip\"><span>" + label + "</span><span class=\"remove\" onclick=\"removeTeacher('" + t.s + "')\">&#10005;</span></div>";
+  }
+  container.innerHTML = html;
 }
 
 function updateCommonFree() {
-  var resultsSection = document.getElementById('commonResults');
-  var table = document.getElementById('commonTable');
-
-  if (selectedTeachers.length === 0) {
-    resultsSection.style.display = 'none';
+  var container = document.getElementById("compareResult");
+  if (selected.length === 0) {
+    container.innerHTML = "<div class=\"empty-state\">Select teachers above to compare their free periods</div>";
     return;
   }
-
-  resultsSection.style.display = 'block';
-  var teachers = selectedTeachers.map(function(s) {
-    return TEACHERS.find(function(x) { return x.s === s; });
-  });
-
-  // Build table: Days as columns, Periods as rows
-  var html = '<thead><tr><th></th>';
-  for (var d = 1; d <= 6; d++) {
-    html += '<th>Day ' + d + '</th>';
-  }
-  html += '</tr></thead><tbody>';
-
-  for (var p = 1; p <= 9; p++) {
-    html += '<tr><th>P' + p + '</th>';
-    for (var dd = 1; dd <= 6; dd++) {
-      var allFree = teachers.every(function(t) { return isFree(t, dd, p); });
-      if (allFree) {
-        html += '<td class="free">FREE</td>';
-      } else {
-        var details = teachers.map(function(t) {
-          var cls = getBusyClass(t, dd, p);
-          if (cls) {
-            return '<span class="teacher-loc">' + t.s + ': ' + cls + '</span>';
-          }
-          return null;
-        }).filter(function(x) { return x !== null; });
-        html += '<td class="busy">' + details.join('') + '</td>';
-      }
+  var teachers = [];
+  for (var i = 0; i < selected.length; i++) {
+    for (var j = 0; j < DATA.length; j++) {
+      if (DATA[j].s === selected[i]) { teachers.push(DATA[j]); break; }
     }
-    html += '</tr>';
   }
-  html += '</tbody>';
-  table.innerHTML = html;
-}
 
-// ==================== SLOT SEARCH ====================
-document.getElementById('searchSlotBtn').addEventListener('click', searchSlot);
-document.getElementById('daySelect').addEventListener('change', searchSlot);
-document.getElementById('periodSelect').addEventListener('change', searchSlot);
+  var periodRows = [
+    { type: "period", num: 1 },
+    { type: "period", num: 2 },
+    { type: "break", label: "Recess 1" },
+    { type: "period", num: 3 },
+    { type: "period", num: 4 },
+    { type: "break", label: "Recess 2" },
+    { type: "period", num: 5 },
+    { type: "period", num: 6 },
+    { type: "break", label: "Lunch" },
+    { type: "period", num: 7 },
+    { type: "period", num: 8 },
+    { type: "period", num: 9 }
+  ];
+
+  var freeCount = 0;
+  var html = "<div class=\"timetable-wrap\"><table class=\"timetable\"><thead><tr><th class=\"period-col\">Period</th>";
+  for (var d = 1; d <= 6; d++) { html += "<th>Day " + d + "</th>"; }
+  html += "</tr></thead><tbody>";
+
+  for (var r = 0; r < periodRows.length; r++) {
+    var row = periodRows[r];
+    if (row.type === "break") {
+      html += "<tr class=\"break-row\"><td class=\"period-col\">" + row.label + "</td>";
+      for (var dd = 0; dd < 6; dd++) { html += "<td>" + row.label + "</td>"; }
+      html += "</tr>";
+    } else {
+      var p = row.num;
+      html += "<tr><td class=\"period-col\">P" + p + "</td>";
+      for (var dc = 1; dc <= 6; dc++) {
+        var allFree = true;
+        var busyList = [];
+        for (var ti = 0; ti < teachers.length; ti++) {
+          if (!isFree(teachers[ti], dc, p)) {
+            allFree = false;
+            busyList.push(formatBusy(teachers[ti], dc, p));
+          }
+        }
+        if (allFree) {
+          html += "<td class=\"free-cell\">\u2713 FREE</td>";
+          freeCount++;
+        } else {
+          html += "<td class=\"busy-cell\">" + busyList.join("<br>") + "</td>";
+        }
+      }
+      html += "</tr>";
+    }
+  }
+  html += "</tbody></table></div>";
+
+  var header = "<div class=\"result-card\"><h3>Common Free Periods <span class=\"count-badge\">" + freeCount + " / 54 slots</span></h3>" + html + "</div>";
+  container.innerHTML = header;
+}
 
 function searchSlot() {
-  var day = document.getElementById('daySelect').value;
-  var period = document.getElementById('periodSelect').value;
-  var resultsSection = document.getElementById('slotResults');
-  var content = document.getElementById('slotResultsContent');
-
+  var day = document.getElementById("daySelect").value;
+  var period = document.getElementById("periodSelect").value;
+  var container = document.getElementById("slotResult");
   if (!day || !period) {
-    resultsSection.style.display = 'none';
+    container.innerHTML = "<div class=\"empty-state\">Please select both day and period</div>";
     return;
   }
-
-  var d = parseInt(day);
-  var p = parseInt(period);
-
-  var freeTeachers = TEACHERS.filter(function(t) { return isFree(t, d, p); });
-  var normalFree = freeTeachers.filter(function(t) { return SGDS_TEACHERS.indexOf(t.s) === -1; });
-  var sgdsFree = freeTeachers.filter(function(t) { return SGDS_TEACHERS.indexOf(t.s) !== -1; });
-
-  resultsSection.style.display = 'block';
-
-  var html = '<div class="results-header">Day ' + day + ' Period ' + period + ' \u2014 Free Teachers (' + freeTeachers.length + '/' + TEACHERS.length + ')</div>';
-
-  html += '<div class="results-category">';
-  html += '<div class="results-category-label">Normal Teachers (' + normalFree.length + ')</div>';
-  html += '<div class="results-teachers">';
-  if (normalFree.length > 0) {
-    html += normalFree.map(function(t) {
-      return '<span class="teacher-tag normal">' + t.s + ' (' + t.e + (t.c ? ' ' + t.c : '') + ')</span>';
-    }).join('');
-  } else {
-    html += '<span class="no-results">None</span>';
+  var freeNormal = [];
+  var freeSGDS = [];
+  for (var i = 0; i < DATA.length; i++) {
+    var t = DATA[i];
+    var isSGDS = SGDS.indexOf(t.s) !== -1;
+    if (isFree(t, day, period)) {
+      if (isSGDS) { freeSGDS.push(t.s); } else { freeNormal.push(t.s); }
+    }
   }
-  html += '</div></div>';
+  var totalFree = freeNormal.length + freeSGDS.length;
+  var html = "<div class=\"result-card\"><h3>Day " + day + " Period " + period + " <span class=\"count-badge\">" + totalFree + " free</span></h3>";
+  html += "<div class=\"free-list\">";
 
-  html += '<div class="results-category">';
-  html += '<div class="results-category-label">Student Guidance &amp; Discipline Services (' + sgdsFree.length + ')</div>';
-  html += '<div class="results-teachers">';
-  if (sgdsFree.length > 0) {
-    html += sgdsFree.map(function(t) {
-      return '<span class="teacher-tag sgds">' + t.s + ' (' + t.e + (t.c ? ' ' + t.c : '') + ')</span>';
-    }).join('');
-  } else {
-    html += '<span class="no-results">None</span>';
+  html += "<div class=\"free-list-section\"><h4>Free Teachers (" + freeNormal.length + ")</h4><div class=\"free-teachers\">";
+  for (var ni = 0; ni < freeNormal.length; ni++) {
+    html += "<span class=\"free-tag\">" + freeNormal[ni] + "</span>";
   }
-  html += '</div></div>';
+  if (freeNormal.length === 0) { html += "<span style=\"color:var(--text-muted);font-size:0.8rem;\">None</span>"; }
+  html += "</div></div>";
 
-  content.innerHTML = html;
+  html += "<div class=\"free-list-section\"><h4 class=\"sgds-header\">SGDS Free (" + freeSGDS.length + ")</h4><div class=\"free-teachers\">";
+  for (var si = 0; si < freeSGDS.length; si++) {
+    html += "<span class=\"free-tag sgds\">" + freeSGDS[si] + "</span>";
+  }
+  if (freeSGDS.length === 0) { html += "<span style=\"color:var(--text-muted);font-size:0.8rem;\">None</span>"; }
+  html += "</div></div>";
+
+  html += "</div></div>";
+  container.innerHTML = html;
 }
+
+document.addEventListener("click", function(e) {
+  var dropdown = document.getElementById("dropdown");
+  var searchBox = document.querySelector(".search-box");
+  if (!searchBox.contains(e.target)) {
+    dropdown.classList.remove("show");
+  }
+});
+
+updateCommonFree();
 </script>
 </body>
 </html>
