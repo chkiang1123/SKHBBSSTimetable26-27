@@ -567,6 +567,223 @@ h1 {
   color: var(--red);
 }
 
+.class-subject-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  align-items: flex-start;
+}
+
+.class-subject-row .class-grid-wrap {
+  flex: 0 0 auto;
+  margin-bottom: 0;
+  max-width: 180px;
+}
+
+.class-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.class-grid .form-group {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.class-grid .form-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  min-width: 22px;
+}
+
+.class-btn {
+  padding: 4px 7px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.class-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.class-btn.selected {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.subject-filter-wrap {
+  flex: 1;
+  min-width: 0;
+}
+
+.subject-filter-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.subject-filter-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.subject-btn {
+  padding: 3px 8px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.subject-btn:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+  background: rgba(210,153,34,0.1);
+}
+
+.subject-btn.selected {
+  background: rgba(210,153,34,0.15);
+  border-color: var(--orange);
+  color: var(--orange);
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .class-subject-row {
+    flex-direction: column;
+  }
+  .class-subject-row .class-grid-wrap {
+    max-width: 100%;
+  }
+  .class-grid .form-group {
+    gap: 4px;
+  }
+  .class-btn {
+    padding: 5px 9px;
+    font-size: 0.72rem;
+  }
+}
+
+.subject-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  margin-top: 12px;
+}
+
+.subject-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+
+.subject-table th, .subject-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border: 1px solid var(--border);
+  font-family: var(--font-mono);
+}
+
+.subject-table th {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.subject-table td {
+  color: var(--text-primary);
+}
+
+.subject-table tr:hover td {
+  background: rgba(88,166,255,0.04);
+}
+
+.subject-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  background: var(--accent-dim);
+  border: 1px solid var(--chip-border);
+  border-radius: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin: 2px 3px 2px 0;
+}
+
+.class-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  background: var(--free-bg);
+  border: 1px solid var(--free-border);
+  border-radius: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--green);
+  margin: 2px 3px 2px 0;
+}
+
+.teacher-info-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.teacher-info-header .initials {
+  font-family: var(--font-mono);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.teacher-info-header .full-name {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
 .empty-state {
   text-align: center;
   padding: 32px 16px;
@@ -598,8 +815,10 @@ h1 {
   <p class="subtitle">58 teachers · 6 days · 9 periods</p>
 
   <div class="tabs">
-    <button class="tab active" onclick="switchTab(0)">Compare Teachers</button>
-    <button class="tab" onclick="switchTab(1)">Search by Slot</button>
+    <button class="tab active" onclick="switchTab(0)">Compare</button>
+    <button class="tab" onclick="switchTab(1)">By Slot</button>
+    <button class="tab" onclick="switchTab(2)">By Teacher</button>
+    <button class="tab" onclick="switchTab(3)">By Class</button>
   </div>
 
   <div class="panel active" id="panel0">
@@ -645,6 +864,29 @@ h1 {
       <button class="clear-slots-btn" onclick="clearSlots()">Clear All</button>
     </div>
     <div id="slotResult"></div>
+  </div>
+
+  <div class="panel" id="panel2">
+    <div class="search-box">
+      <input type="text" id="teacherLookup" placeholder="Search teacher (e.g. KCH, Chan)..." oninput="showTeacherLookupDropdown()" onfocus="showTeacherLookupDropdown()">
+      <div class="dropdown" id="teacherLookupDropdown"></div>
+    </div>
+    <button class="toggle-grid-btn" onclick="toggleGrid('teacherLookupGrid')">▸ Select from list</button>
+    <div class="teacher-grid hidden" id="teacherLookupGrid"></div>
+    <div id="teacherLookupResult"></div>
+  </div>
+
+  <div class="panel" id="panel3">
+    <div class="class-subject-row">
+      <div class="class-grid-wrap">
+        <div class="class-grid" id="classGrid"></div>
+      </div>
+      <div class="subject-filter-wrap">
+        <div class="subject-filter-label">Filter by Subject</div>
+        <div class="subject-filter-grid" id="subjectGrid"></div>
+      </div>
+    </div>
+    <div id="classResult"></div>
   </div>
 </div>
 
@@ -957,7 +1199,11 @@ function toggleGrid(gridId) {
   btn.classList.toggle("open", isHidden);
   btn.textContent = isHidden ? "\u25BE Hide list" : "\u25B8 Select from list";
   if (isHidden && grid.children.length === 0) {
-    buildGrid(gridId);
+    if (gridId === "teacherLookupGrid") {
+      buildLookupGrid();
+    } else {
+      buildGrid(gridId);
+    }
   }
 }
 
@@ -1005,15 +1251,369 @@ function syncGridSelections() {
   }
 }
 
+// === Search by Teacher ===
+var selectedLookupTeacher = null;
+
+function showTeacherLookupDropdown() {
+  var input = document.getElementById("teacherLookup");
+  var dropdown = document.getElementById("teacherLookupDropdown");
+  var query = input.value.trim().toLowerCase();
+  if (!query) { dropdown.classList.remove("show"); return; }
+  var matches = DATA.filter(function(t) {
+    return t.s.toLowerCase().indexOf(query) !== -1 ||
+           t.e.toLowerCase().indexOf(query) !== -1 ||
+           t.c.indexOf(query) !== -1;
+  }).slice(0, 10);
+  if (matches.length === 0) { dropdown.classList.remove("show"); return; }
+  var html = "";
+  for (var i = 0; i < matches.length; i++) {
+    var t = matches[i];
+    var nameStr = t.e + (t.c ? " " + t.c : "");
+    html += "<div class=\"dropdown-item\" onclick=\"selectLookupTeacher('" + t.s + "')\"><span class=\"short\">" + t.s + "</span><span class=\"name\">" + nameStr + "</span></div>";
+  }
+  dropdown.innerHTML = html;
+  dropdown.classList.add("show");
+}
+
+function selectLookupTeacher(shortName) {
+  selectedLookupTeacher = shortName;
+  document.getElementById("teacherLookup").value = "";
+  document.getElementById("teacherLookupDropdown").classList.remove("show");
+  highlightLookupGrid();
+  renderTeacherInfo();
+}
+
+function highlightLookupGrid() {
+  var grid = document.getElementById("teacherLookupGrid");
+  var tags = grid.querySelectorAll(".grid-tag");
+  for (var t = 0; t < tags.length; t++) {
+    var short = tags[t].getAttribute("data-short");
+    if (short === selectedLookupTeacher) {
+      tags[t].classList.add("selected");
+    } else {
+      tags[t].classList.remove("selected");
+    }
+  }
+}
+
+function buildLookupGrid() {
+  var grid = document.getElementById("teacherLookupGrid");
+  grid.innerHTML = "";
+  for (var gi = 0; gi < DATA.length; gi++) {
+    var t = DATA[gi];
+    var tag = document.createElement("span");
+    tag.className = "grid-tag" + (SGDS.indexOf(t.s) !== -1 ? " sgds-tag" : "");
+    tag.setAttribute("data-short", t.s);
+    tag.setAttribute("title", t.e + (t.c ? " " + t.c : ""));
+    tag.textContent = t.s + (t.c ? "(" + t.c + ")" : "");
+    if (t.s === selectedLookupTeacher) { tag.classList.add("selected"); }
+    tag.addEventListener("click", (function(short) {
+      return function() {
+        selectLookupTeacher(short);
+      };
+    })(t.s));
+    grid.appendChild(tag);
+  }
+}
+
+function renderTeacherInfo() {
+  var container = document.getElementById("teacherLookupResult");
+  if (!selectedLookupTeacher) {
+    container.innerHTML = "<div class=\"empty-state\">Select a teacher to view their subjects</div>";
+    return;
+  }
+  var teacher = null;
+  for (var i = 0; i < DATA.length; i++) {
+    if (DATA[i].s === selectedLookupTeacher) { teacher = DATA[i]; break; }
+  }
+  if (!teacher) { container.innerHTML = ""; return; }
+
+  // Parse all subject/class assignments
+  var subjects = {};
+  var keys = Object.keys(teacher.b);
+  for (var ki = 0; ki < keys.length; ki++) {
+    var val = teacher.b[keys[ki]];
+    var parts = val.split("|");
+    var cls = parts[0];
+    var sub = parts[1] || "N/A";
+    if (!subjects[sub]) { subjects[sub] = []; }
+    var classes = cls.split(",");
+    for (var ci = 0; ci < classes.length; ci++) {
+      if (subjects[sub].indexOf(classes[ci]) === -1) {
+        subjects[sub].push(classes[ci]);
+      }
+    }
+  }
+
+  // Sort subjects and classes
+  var subjectNames = Object.keys(subjects).sort();
+  for (var si = 0; si < subjectNames.length; si++) {
+    subjects[subjectNames[si]].sort();
+  }
+
+  // Count total periods
+  var totalPeriods = keys.length;
+  var freePeriods = 54 - totalPeriods;
+
+  var html = "<div class=\"result-card\">";
+  html += "<div class=\"teacher-info-header\">";
+  html += "<span class=\"initials\">" + teacher.s + (teacher.c ? "(" + teacher.c + ")" : "") + "</span>";
+  html += "<span class=\"full-name\">" + teacher.e + "</span>";
+  html += "</div>";
+
+  html += "<div style=\"margin-bottom:12px;font-size:0.8rem;color:var(--text-secondary);font-family:var(--font-mono);\">";
+  html += "Teaching: <strong style=\"color:var(--accent)\">" + totalPeriods + "</strong> periods &nbsp;|&nbsp; Free: <strong style=\"color:var(--green)\">" + freePeriods + "</strong> periods &nbsp;|&nbsp; Subjects: <strong style=\"color:var(--orange)\">" + subjectNames.length + "</strong>";
+  html += "</div>";
+
+  html += "<div class=\"subject-table-wrap\"><table class=\"subject-table\">";
+  html += "<thead><tr><th>Subject</th><th>Classes</th><th>Periods</th></tr></thead><tbody>";
+  for (var sj = 0; sj < subjectNames.length; sj++) {
+    var subName = subjectNames[sj];
+    var classList = subjects[subName];
+    // Count periods for this subject
+    var periodCount = 0;
+    for (var kj = 0; kj < keys.length; kj++) {
+      var v = teacher.b[keys[kj]];
+      if (v.split("|")[1] === subName) { periodCount++; }
+    }
+    html += "<tr><td><span class=\"subject-badge\">" + subName + "</span></td>";
+    html += "<td>";
+    for (var ck = 0; ck < classList.length; ck++) {
+      html += "<span class=\"class-badge\">" + classList[ck] + "</span>";
+    }
+    html += "</td><td style=\"text-align:center;\">" + periodCount + "</td></tr>";
+  }
+  html += "</tbody></table></div>";
+  html += "</div>";
+  container.innerHTML = html;
+}
+
+// === Search by Class ===
+var ALL_CLASSES = [];
+(function() {
+  var forms = [1,2,3,4,5,6];
+  var letters = ["A","B","C","D"];
+  for (var fi = 0; fi < forms.length; fi++) {
+    for (var li = 0; li < letters.length; li++) {
+      ALL_CLASSES.push(forms[fi] + letters[li]);
+    }
+  }
+})();
+
+var selectedClass = null;
+var selectedSubject = null;
+var ALL_SUBJECTS = [];
+
+function buildAllSubjects() {
+  var subSet = {};
+  for (var i = 0; i < DATA.length; i++) {
+    var keys = Object.keys(DATA[i].b);
+    for (var ki = 0; ki < keys.length; ki++) {
+      var val = DATA[i].b[keys[ki]];
+      var sub = val.split("|")[1] || "N/A";
+      subSet[sub] = true;
+    }
+  }
+  ALL_SUBJECTS = Object.keys(subSet).sort();
+}
+
+function buildClassGrid() {
+  var grid = document.getElementById("classGrid");
+  grid.innerHTML = "";
+  var forms = [1,2,3,4,5,6];
+  var letters = ["A","B","C","D"];
+  for (var fi = 0; fi < forms.length; fi++) {
+    var row = document.createElement("div");
+    row.className = "form-group";
+    var label = document.createElement("span");
+    label.className = "form-label";
+    label.textContent = "F." + forms[fi];
+    row.appendChild(label);
+    for (var li = 0; li < letters.length; li++) {
+      var cls = forms[fi] + letters[li];
+      var btn = document.createElement("span");
+      btn.className = "class-btn";
+      btn.setAttribute("data-class", cls);
+      btn.textContent = cls;
+      if (cls === selectedClass) { btn.classList.add("selected"); }
+      btn.addEventListener("click", (function(c) {
+        return function() { selectClass(c); };
+      })(cls));
+      row.appendChild(btn);
+    }
+    grid.appendChild(row);
+  }
+}
+
+function buildSubjectGrid() {
+  var grid = document.getElementById("subjectGrid");
+  grid.innerHTML = "";
+  for (var si = 0; si < ALL_SUBJECTS.length; si++) {
+    var btn = document.createElement("span");
+    btn.className = "subject-btn";
+    btn.setAttribute("data-subject", ALL_SUBJECTS[si]);
+    btn.textContent = ALL_SUBJECTS[si];
+    if (ALL_SUBJECTS[si] === selectedSubject) { btn.classList.add("selected"); }
+    btn.addEventListener("click", (function(s) {
+      return function() { selectSubject(s); };
+    })(ALL_SUBJECTS[si]));
+    grid.appendChild(btn);
+  }
+}
+
+function selectClass(cls) {
+  selectedClass = cls;
+  var btns = document.querySelectorAll(".class-btn");
+  for (var bi = 0; bi < btns.length; bi++) {
+    if (btns[bi].getAttribute("data-class") === cls) {
+      btns[bi].classList.add("selected");
+    } else {
+      btns[bi].classList.remove("selected");
+    }
+  }
+  renderClassInfo();
+}
+
+function selectSubject(sub) {
+  if (selectedSubject === sub) {
+    selectedSubject = null;
+  } else {
+    selectedSubject = sub;
+  }
+  var btns = document.querySelectorAll(".subject-btn");
+  for (var bi = 0; bi < btns.length; bi++) {
+    if (btns[bi].getAttribute("data-subject") === selectedSubject) {
+      btns[bi].classList.add("selected");
+    } else {
+      btns[bi].classList.remove("selected");
+    }
+  }
+  renderClassInfo();
+}
+
+function renderClassInfo() {
+  var container = document.getElementById("classResult");
+  if (!selectedClass && !selectedSubject) {
+    container.innerHTML = "<div class=\"empty-state\">Select a class or subject to view teachers</div>";
+    return;
+  }
+
+  // Find all matching assignments
+  var assignments = [];
+  for (var i = 0; i < DATA.length; i++) {
+    var teacher = DATA[i];
+    var keys = Object.keys(teacher.b);
+    var teacherSubjects = {};
+    for (var ki = 0; ki < keys.length; ki++) {
+      var val = teacher.b[keys[ki]];
+      var parts = val.split("|");
+      var cls = parts[0];
+      var sub = parts[1] || "N/A";
+      var classes = cls.split(",");
+
+      // Filter by selected subject
+      if (selectedSubject && sub !== selectedSubject) continue;
+
+      // Filter by selected class
+      if (selectedClass && classes.indexOf(selectedClass) === -1) continue;
+
+      // Build a compound key for grouping: teacher + subject + class(es)
+      var matchedClasses = selectedClass ? [selectedClass] : classes;
+      for (var mc = 0; mc < matchedClasses.length; mc++) {
+        var groupKey = teacher.s + "|" + sub + "|" + matchedClasses[mc];
+        if (!teacherSubjects[groupKey]) {
+          teacherSubjects[groupKey] = { sub: sub, cls: matchedClasses[mc], periods: 0 };
+        }
+        teacherSubjects[groupKey].periods++;
+      }
+    }
+    var groupKeys = Object.keys(teacherSubjects);
+    for (var gk = 0; gk < groupKeys.length; gk++) {
+      var entry = teacherSubjects[groupKeys[gk]];
+      assignments.push({
+        teacher: teacher,
+        subject: entry.sub,
+        cls: entry.cls,
+        periods: entry.periods
+      });
+    }
+  }
+
+  // Sort by subject then by class
+  assignments.sort(function(a, b) {
+    if (a.subject < b.subject) return -1;
+    if (a.subject > b.subject) return 1;
+    if (a.cls < b.cls) return -1;
+    if (a.cls > b.cls) return 1;
+    return 0;
+  });
+
+  // Build title
+  var titleParts = [];
+  if (selectedClass) titleParts.push("Class " + selectedClass);
+  if (selectedSubject) titleParts.push(selectedSubject);
+  var title = titleParts.join(" · ");
+
+  var html = "<div class=\"result-card\">";
+  html += "<h3>" + title + " <span class=\"count-badge\">" + assignments.length + " result" + (assignments.length !== 1 ? "s" : "") + "</span></h3>";
+
+  if (assignments.length === 0) {
+    html += "<div class=\"empty-state\">No teaching assignments found</div>";
+  } else {
+    html += "<div class=\"subject-table-wrap\"><table class=\"subject-table\">";
+    if (selectedClass && !selectedSubject) {
+      html += "<thead><tr><th>Subject</th><th>Teacher</th><th>Periods/wk</th></tr></thead><tbody>";
+      for (var ai = 0; ai < assignments.length; ai++) {
+        var a = assignments[ai];
+        var tLabel = a.teacher.s + (a.teacher.c ? "(" + a.teacher.c + ")" : "");
+        html += "<tr><td><span class=\"subject-badge\">" + a.subject + "</span></td>";
+        html += "<td>" + tLabel + " <span style=\"color:var(--text-muted);font-size:0.7rem;\">" + a.teacher.e + "</span></td>";
+        html += "<td style=\"text-align:center;\">" + a.periods + "</td></tr>";
+      }
+    } else if (selectedSubject && !selectedClass) {
+      html += "<thead><tr><th>Class</th><th>Teacher</th><th>Periods/wk</th></tr></thead><tbody>";
+      for (var aj = 0; aj < assignments.length; aj++) {
+        var b = assignments[aj];
+        var tLabel2 = b.teacher.s + (b.teacher.c ? "(" + b.teacher.c + ")" : "");
+        html += "<tr><td><span class=\"class-badge\">" + b.cls + "</span></td>";
+        html += "<td>" + tLabel2 + " <span style=\"color:var(--text-muted);font-size:0.7rem;\">" + b.teacher.e + "</span></td>";
+        html += "<td style=\"text-align:center;\">" + b.periods + "</td></tr>";
+      }
+    } else {
+      html += "<thead><tr><th>Subject</th><th>Class</th><th>Teacher</th><th>Periods/wk</th></tr></thead><tbody>";
+      for (var ak = 0; ak < assignments.length; ak++) {
+        var c = assignments[ak];
+        var tLabel3 = c.teacher.s + (c.teacher.c ? "(" + c.teacher.c + ")" : "");
+        html += "<tr><td><span class=\"subject-badge\">" + c.subject + "</span></td>";
+        html += "<td><span class=\"class-badge\">" + c.cls + "</span></td>";
+        html += "<td>" + tLabel3 + " <span style=\"color:var(--text-muted);font-size:0.7rem;\">" + c.teacher.e + "</span></td>";
+        html += "<td style=\"text-align:center;\">" + c.periods + "</td></tr>";
+      }
+    }
+    html += "</tbody></table></div>";
+  }
+  html += "</div>";
+  container.innerHTML = html;
+}
+
+
 document.addEventListener("click", function(e) {
   var dropdown = document.getElementById("dropdown");
   var searchBox = document.querySelector(".search-box");
   if (!searchBox.contains(e.target)) {
     dropdown.classList.remove("show");
   }
+  var lookupDropdown = document.getElementById("teacherLookupDropdown");
+  var lookupBox = document.getElementById("teacherLookup");
+  if (lookupBox && !lookupBox.parentElement.contains(e.target)) {
+    lookupDropdown.classList.remove("show");
+  }
 });
 
 updateCommonFree();
+buildAllSubjects();
+buildClassGrid();
+buildSubjectGrid();
 </script>
 </body>
 </html>
