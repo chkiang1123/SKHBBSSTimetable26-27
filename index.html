@@ -308,48 +308,6 @@ h1 {
   padding: 5px 6px;
 }
 
-.slot-search {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-}
-
-.slot-search select {
-  padding: 10px 14px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  color: var(--text-primary);
-  font-family: var(--font-mono);
-  font-size: 16px;
-  outline: none;
-  cursor: pointer;
-  flex: 1;
-  min-width: 120px;
-}
-
-.slot-search select:focus {
-  border-color: var(--accent);
-}
-
-.slot-search button {
-  padding: 10px 20px;
-  background: var(--accent);
-  border: none;
-  border-radius: var(--radius);
-  color: #0d1117;
-  font-family: var(--font-mono);
-  font-weight: 600;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.slot-search button:hover {
-  background: #79c0ff;
-  transform: translateY(-1px);
-}
 
 .free-list {
   margin-top: 12px;
@@ -507,6 +465,108 @@ h1 {
   color: var(--orange);
 }
 
+.slot-grid-wrap {
+  margin-bottom: 16px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.slot-grid {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  min-width: 360px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  user-select: none;
+}
+
+.slot-grid th, .slot-grid td {
+  padding: 10px 6px;
+  text-align: center;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.slot-grid th {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.slot-grid th:hover {
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.slot-grid .period-col {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-weight: 600;
+  width: 42px;
+}
+
+.slot-grid .period-col:hover {
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.slot-grid td:not(.period-col) {
+  background: var(--bg-secondary);
+  color: var(--text-muted);
+}
+
+.slot-grid td:not(.period-col):hover {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+}
+
+.slot-grid td.slot-selected {
+  background: var(--accent-dim) !important;
+  border-color: var(--accent) !important;
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+
+.slot-grid td.slot-selected::after {
+  content: '\2713';
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.slot-grid .break-row td {
+  background: var(--break-bg);
+  color: var(--purple);
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  cursor: default;
+  padding: 4px 6px;
+}
+
+.clear-slots-btn {
+  margin-top: 8px;
+  padding: 6px 14px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.clear-slots-btn:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+
 .empty-state {
   text-align: center;
   padding: 32px 16px;
@@ -528,8 +588,7 @@ h1 {
   h1 { font-size: 1.1rem; }
   .timetable { font-size: 0.68rem; }
   .timetable th, .timetable td { padding: 6px 4px; }
-  .slot-search { flex-direction: column; }
-  .slot-search select, .slot-search button { width: 100%; }
+  .slot-grid th, .slot-grid td { padding: 8px 4px; font-size: 0.7rem; }
 }
 </style>
 </head>
@@ -555,32 +614,36 @@ h1 {
   </div>
 
   <div class="panel" id="panel1">
-    <div class="slot-search">
-      <select id="daySelect">
-        <option value="">Select Day</option>
-        <option value="1">Day 1</option>
-        <option value="2">Day 2</option>
-        <option value="3">Day 3</option>
-        <option value="4">Day 4</option>
-        <option value="5">Day 5</option>
-        <option value="6">Day 6</option>
-      </select>
-      <select id="periodSelect">
-        <option value="">Select Period</option>
-        <option value="1">Period 1</option>
-        <option value="2">Period 2</option>
-        <option value="3">Period 3</option>
-        <option value="4">Period 4</option>
-        <option value="5">Period 5</option>
-        <option value="6">Period 6</option>
-        <option value="7">Period 7</option>
-        <option value="8">Period 8</option>
-        <option value="9">Period 9</option>
-      </select>
-      <button onclick="searchSlot()">Find Free</button>
+    <div class="slot-grid-wrap">
+      <table class="slot-grid" id="slotGridTable">
+        <thead>
+          <tr>
+            <th class="period-col"></th>
+            <th onclick="toggleSlotCol(1)">Day 1</th>
+            <th onclick="toggleSlotCol(2)">Day 2</th>
+            <th onclick="toggleSlotCol(3)">Day 3</th>
+            <th onclick="toggleSlotCol(4)">Day 4</th>
+            <th onclick="toggleSlotCol(5)">Day 5</th>
+            <th onclick="toggleSlotCol(6)">Day 6</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="period-col" onclick="toggleSlotRow(1)">P1</td><td onclick="toggleSlotCell(this,1,1)"></td><td onclick="toggleSlotCell(this,2,1)"></td><td onclick="toggleSlotCell(this,3,1)"></td><td onclick="toggleSlotCell(this,4,1)"></td><td onclick="toggleSlotCell(this,5,1)"></td><td onclick="toggleSlotCell(this,6,1)"></td></tr>
+          <tr><td class="period-col" onclick="toggleSlotRow(2)">P2</td><td onclick="toggleSlotCell(this,1,2)"></td><td onclick="toggleSlotCell(this,2,2)"></td><td onclick="toggleSlotCell(this,3,2)"></td><td onclick="toggleSlotCell(this,4,2)"></td><td onclick="toggleSlotCell(this,5,2)"></td><td onclick="toggleSlotCell(this,6,2)"></td></tr>
+          <tr class="break-row"><td class="period-col" colspan="7">Recess 1</td></tr>
+          <tr><td class="period-col" onclick="toggleSlotRow(3)">P3</td><td onclick="toggleSlotCell(this,1,3)"></td><td onclick="toggleSlotCell(this,2,3)"></td><td onclick="toggleSlotCell(this,3,3)"></td><td onclick="toggleSlotCell(this,4,3)"></td><td onclick="toggleSlotCell(this,5,3)"></td><td onclick="toggleSlotCell(this,6,3)"></td></tr>
+          <tr><td class="period-col" onclick="toggleSlotRow(4)">P4</td><td onclick="toggleSlotCell(this,1,4)"></td><td onclick="toggleSlotCell(this,2,4)"></td><td onclick="toggleSlotCell(this,3,4)"></td><td onclick="toggleSlotCell(this,4,4)"></td><td onclick="toggleSlotCell(this,5,4)"></td><td onclick="toggleSlotCell(this,6,4)"></td></tr>
+          <tr class="break-row"><td class="period-col" colspan="7">Recess 2</td></tr>
+          <tr><td class="period-col" onclick="toggleSlotRow(5)">P5</td><td onclick="toggleSlotCell(this,1,5)"></td><td onclick="toggleSlotCell(this,2,5)"></td><td onclick="toggleSlotCell(this,3,5)"></td><td onclick="toggleSlotCell(this,4,5)"></td><td onclick="toggleSlotCell(this,5,5)"></td><td onclick="toggleSlotCell(this,6,5)"></td></tr>
+          <tr><td class="period-col" onclick="toggleSlotRow(6)">P6</td><td onclick="toggleSlotCell(this,1,6)"></td><td onclick="toggleSlotCell(this,2,6)"></td><td onclick="toggleSlotCell(this,3,6)"></td><td onclick="toggleSlotCell(this,4,6)"></td><td onclick="toggleSlotCell(this,5,6)"></td><td onclick="toggleSlotCell(this,6,6)"></td></tr>
+          <tr class="break-row"><td class="period-col" colspan="7">Lunch</td></tr>
+          <tr><td class="period-col" onclick="toggleSlotRow(7)">P7</td><td onclick="toggleSlotCell(this,1,7)"></td><td onclick="toggleSlotCell(this,2,7)"></td><td onclick="toggleSlotCell(this,3,7)"></td><td onclick="toggleSlotCell(this,4,7)"></td><td onclick="toggleSlotCell(this,5,7)"></td><td onclick="toggleSlotCell(this,6,7)"></td></tr>
+          <tr><td class="period-col" onclick="toggleSlotRow(8)">P8</td><td onclick="toggleSlotCell(this,1,8)"></td><td onclick="toggleSlotCell(this,2,8)"></td><td onclick="toggleSlotCell(this,3,8)"></td><td onclick="toggleSlotCell(this,4,8)"></td><td onclick="toggleSlotCell(this,5,8)"></td><td onclick="toggleSlotCell(this,6,8)"></td></tr>
+          <tr><td class="period-col" onclick="toggleSlotRow(9)">P9</td><td onclick="toggleSlotCell(this,1,9)"></td><td onclick="toggleSlotCell(this,2,9)"></td><td onclick="toggleSlotCell(this,3,9)"></td><td onclick="toggleSlotCell(this,4,9)"></td><td onclick="toggleSlotCell(this,5,9)"></td><td onclick="toggleSlotCell(this,6,9)"></td></tr>
+        </tbody>
+      </table>
+      <button class="clear-slots-btn" onclick="clearSlots()">Clear All</button>
     </div>
-    <button class="toggle-grid-btn" onclick="toggleGrid('slotGrid')">▸ Select from list</button>
-    <div class="teacher-grid hidden" id="slotGrid"></div>
     <div id="slotResult"></div>
   </div>
 </div>
@@ -756,25 +819,106 @@ function updateCommonFree() {
   container.innerHTML = header;
 }
 
+var selectedSlots = [];
+
+function toggleSlotCell(cell, day, period) {
+  var key = day + "_" + period;
+  var idx = selectedSlots.indexOf(key);
+  if (idx !== -1) {
+    selectedSlots.splice(idx, 1);
+    cell.classList.remove("slot-selected");
+  } else {
+    selectedSlots.push(key);
+    cell.classList.add("slot-selected");
+  }
+  searchSlot();
+}
+
+function toggleSlotRow(period) {
+  var table = document.getElementById("slotGridTable");
+  var rows = table.querySelectorAll("tbody tr:not(.break-row)");
+  var targetRow = null;
+  for (var ri = 0; ri < rows.length; ri++) {
+    var pCell = rows[ri].querySelector(".period-col");
+    if (pCell && pCell.textContent === "P" + period) { targetRow = rows[ri]; break; }
+  }
+  if (!targetRow) return;
+  var cells = targetRow.querySelectorAll("td:not(.period-col)");
+  var allSelected = true;
+  for (var ci = 0; ci < cells.length; ci++) {
+    var d = ci + 1;
+    if (selectedSlots.indexOf(d + "_" + period) === -1) { allSelected = false; break; }
+  }
+  for (var cj = 0; cj < cells.length; cj++) {
+    var dayNum = cj + 1;
+    var key = dayNum + "_" + period;
+    var idx = selectedSlots.indexOf(key);
+    if (allSelected) {
+      if (idx !== -1) { selectedSlots.splice(idx, 1); }
+      cells[cj].classList.remove("slot-selected");
+    } else {
+      if (idx === -1) { selectedSlots.push(key); }
+      cells[cj].classList.add("slot-selected");
+    }
+  }
+  searchSlot();
+}
+
+function toggleSlotCol(day) {
+  var table = document.getElementById("slotGridTable");
+  var rows = table.querySelectorAll("tbody tr:not(.break-row)");
+  var periods = [1,2,3,4,5,6,7,8,9];
+  var allSelected = true;
+  for (var pi = 0; pi < periods.length; pi++) {
+    if (selectedSlots.indexOf(day + "_" + periods[pi]) === -1) { allSelected = false; break; }
+  }
+  for (var ri = 0; ri < rows.length; ri++) {
+    var pCell = rows[ri].querySelector(".period-col");
+    if (!pCell) continue;
+    var pNum = parseInt(pCell.textContent.replace("P", ""));
+    var cell = rows[ri].querySelectorAll("td:not(.period-col)")[day - 1];
+    var key = day + "_" + pNum;
+    var idx = selectedSlots.indexOf(key);
+    if (allSelected) {
+      if (idx !== -1) { selectedSlots.splice(idx, 1); }
+      if (cell) cell.classList.remove("slot-selected");
+    } else {
+      if (idx === -1) { selectedSlots.push(key); }
+      if (cell) cell.classList.add("slot-selected");
+    }
+  }
+  searchSlot();
+}
+
+function clearSlots() {
+  selectedSlots = [];
+  var cells = document.querySelectorAll(".slot-grid td.slot-selected");
+  for (var ci = 0; ci < cells.length; ci++) { cells[ci].classList.remove("slot-selected"); }
+  searchSlot();
+}
+
 function searchSlot() {
-  var day = document.getElementById("daySelect").value;
-  var period = document.getElementById("periodSelect").value;
   var container = document.getElementById("slotResult");
-  if (!day || !period) {
-    container.innerHTML = "<div class=\"empty-state\">Please select both day and period</div>";
+  if (selectedSlots.length === 0) {
+    container.innerHTML = "<div class=\"empty-state\">Click slots above to find free teachers</div>";
     return;
   }
   var freeNormal = [];
   var freeSGDS = [];
   for (var i = 0; i < DATA.length; i++) {
     var t = DATA[i];
-    var isSGDS = SGDS.indexOf(t.s) !== -1;
-    if (isFree(t, day, period)) {
-      if (isSGDS) { freeSGDS.push(t.s); } else { freeNormal.push(t.s); }
+    var allFree = true;
+    for (var si = 0; si < selectedSlots.length; si++) {
+      var parts = selectedSlots[si].split("_");
+      if (!isFree(t, parts[0], parts[1])) { allFree = false; break; }
+    }
+    if (allFree) {
+      if (SGDS.indexOf(t.s) !== -1) { freeSGDS.push(t.s); } else { freeNormal.push(t.s); }
     }
   }
   var totalFree = freeNormal.length + freeSGDS.length;
-  var html = "<div class=\"result-card\"><h3>Day " + day + " Period " + period + " <span class=\"count-badge\">" + totalFree + " free</span></h3>";
+  var slotLabel = selectedSlots.length === 1 ? "Day " + selectedSlots[0].split("_")[0] + " Period " + selectedSlots[0].split("_")[1] : selectedSlots.length + " slots selected";
+  var html = "<div class=\"result-card\"><h3>" + slotLabel + " <span class=\"count-badge\">" + totalFree + " free</span></h3>";
   html += "<div class=\"free-list\">";
 
   html += "<div class=\"free-list-section\"><h4>Free Teachers (" + freeNormal.length + ")</h4><div class=\"free-teachers\">";
@@ -788,8 +932,8 @@ function searchSlot() {
   for (var gi = 0; gi < SGDS_GROUPS.length; gi++) {
     var grp = SGDS_GROUPS[gi];
     var grpFree = [];
-    for (var si = 0; si < grp.teachers.length; si++) {
-      if (freeSGDS.indexOf(grp.teachers[si]) !== -1) { grpFree.push(grp.teachers[si]); }
+    for (var gsi = 0; gsi < grp.teachers.length; gsi++) {
+      if (freeSGDS.indexOf(grp.teachers[gsi]) !== -1) { grpFree.push(grp.teachers[gsi]); }
     }
     html += "<div class=\"sgds-form-row\"><span class=\"sgds-form-label\">" + grp.form + "</span>";
     for (var ti = 0; ti < grp.teachers.length; ti++) {
