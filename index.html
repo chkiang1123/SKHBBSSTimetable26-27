@@ -323,6 +323,31 @@ h1 {
   padding: 5px 6px;
 }
 
+.timetable .lesson-cell {
+  background: var(--bg-secondary);
+  padding: 6px 4px;
+  vertical-align: middle;
+}
+
+.timetable .lesson-cell .lesson-sub {
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 0.78rem;
+  line-height: 1.3;
+}
+
+.timetable .lesson-cell .lesson-teacher {
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+  line-height: 1.2;
+}
+
+.timetable .lesson-cell .lesson-teacher-name {
+  font-size: 0.58rem;
+  color: var(--text-muted);
+  line-height: 1.2;
+}
 
 .free-list {
   margin-top: 12px;
@@ -815,11 +840,30 @@ h1 {
   font-weight: 600;
 }
 
+.section-divider {
+  margin: 20px 0 16px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--border-light);
+}
+
+.section-divider h3 {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--accent);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 @media (max-width: 600px) {
   .container { padding: 12px; }
   h1 { font-size: 1.1rem; }
   .timetable { font-size: 0.68rem; }
   .timetable th, .timetable td { padding: 6px 4px; }
+  .timetable .lesson-cell .lesson-sub { font-size: 0.7rem; }
+  .timetable .lesson-cell .lesson-teacher { font-size: 0.6rem; }
+  .timetable .lesson-cell .lesson-teacher-name { font-size: 0.54rem; }
   .slot-grid th, .slot-grid td { padding: 8px 4px; font-size: 0.7rem; }
 }
 </style>
@@ -827,7 +871,7 @@ h1 {
 <body>
 <div class="container">
   <h1>Teacher Free Period Finder</h1>
-  <p class="subtitle">58 teachers · 6 days · 9 periods</p>
+  <p class="subtitle">58 teachers &middot; 6 days &middot; 9 periods</p>
 
   <div class="tabs">
     <button class="tab active" onclick="switchTab(0)">Compare</button>
@@ -841,7 +885,7 @@ h1 {
       <input type="text" id="teacherSearch" placeholder="Search teacher (e.g. KCH, Chan)..." oninput="showDropdown()" onfocus="showDropdown()">
       <div class="dropdown" id="dropdown"></div>
     </div>
-    <button class="toggle-grid-btn" onclick="toggleGrid('compareGrid')">▸ Select from list</button>
+    <button class="toggle-grid-btn" onclick="toggleGrid('compareGrid')">&#9656; Select from list</button>
     <div class="teacher-grid hidden" id="compareGrid"></div>
     <div class="chips" id="chips"></div>
     <div id="compareResult"></div>
@@ -886,7 +930,7 @@ h1 {
       <input type="text" id="teacherLookup" placeholder="Search teacher (e.g. KCH, Chan)..." oninput="showTeacherLookupDropdown()" onfocus="showTeacherLookupDropdown()">
       <div class="dropdown" id="teacherLookupDropdown"></div>
     </div>
-    <button class="toggle-grid-btn" onclick="toggleGrid('teacherLookupGrid')">▸ Select from list</button>
+    <button class="toggle-grid-btn" onclick="toggleGrid('teacherLookupGrid')">&#9656; Select from list</button>
     <div class="teacher-grid hidden" id="teacherLookupGrid"></div>
     <div id="teacherLookupResult"></div>
   </div>
@@ -1296,7 +1340,7 @@ function buildGrid(gridId) {
     if (selected.indexOf(t.s) !== -1) {
       tag.classList.add("selected");
     }
-    tag.addEventListener("click", (function(short, el, gid) {
+    tag.addEventListener("click", (function(short, el) {
       return function() {
         if (selected.indexOf(short) !== -1) {
           removeTeacher(short);
@@ -1307,7 +1351,7 @@ function buildGrid(gridId) {
         }
         syncGridSelections();
       };
-    })(t.s, tag, gridId));
+    })(t.s, tag));
     grid.appendChild(tag);
   }
 }
@@ -1404,7 +1448,6 @@ function renderTeacherInfo() {
   }
   if (!teacher) { container.innerHTML = ""; return; }
 
-  // Parse all subject/class assignments
   var subjects = {};
   var keys = Object.keys(teacher.b);
   var offCount = 0;
@@ -1423,13 +1466,11 @@ function renderTeacherInfo() {
     }
   }
 
-  // Sort subjects and classes
   var subjectNames = Object.keys(subjects).sort();
   for (var si = 0; si < subjectNames.length; si++) {
     subjects[subjectNames[si]].sort();
   }
 
-  // Count total periods
   var totalPeriods = keys.length - offCount;
   var freePeriods = 54 - totalPeriods - offCount;
 
@@ -1462,7 +1503,6 @@ function renderTeacherInfo() {
   for (var sj = 0; sj < subjectNames.length; sj++) {
     var subName = subjectNames[sj];
     var classList = subjects[subName];
-    // Count periods for this subject
     var periodCount = 0;
     for (var kj = 0; kj < keys.length; kj++) {
       var v = teacher.b[keys[kj]];
@@ -1584,6 +1624,109 @@ function selectSubject(sub) {
   renderClassInfo();
 }
 
+// Build class timetable: returns object keyed by "day_period" with arrays of {subject, teacherShort, teacherFull, teacherChi}
+function getClassTimetable(className) {
+  var tt = {};
+  for (var i = 0; i < DATA.length; i++) {
+    var teacher = DATA[i];
+    var keys = Object.keys(teacher.b);
+    for (var ki = 0; ki < keys.length; ki++) {
+      var val = teacher.b[keys[ki]];
+      var parts = val.split("|");
+      var cls = parts[0];
+      var sub = parts[1] || "";
+      if (sub === "OFF") continue;
+      var classes = cls.split(",");
+      if (classes.indexOf(className) !== -1) {
+        if (!tt[keys[ki]]) {
+          tt[keys[ki]] = [];
+        }
+        // Avoid duplicates for same teacher+subject in same slot
+        var isDup = false;
+        for (var di = 0; di < tt[keys[ki]].length; di++) {
+          if (tt[keys[ki]][di].teacherShort === teacher.s && tt[keys[ki]][di].subject === sub) {
+            isDup = true;
+            break;
+          }
+        }
+        if (!isDup) {
+          tt[keys[ki]].push({
+            subject: sub,
+            teacherShort: teacher.s,
+            teacherFull: teacher.e,
+            teacherChi: teacher.c
+          });
+        }
+      }
+    }
+  }
+  return tt;
+}
+
+function renderClassTimetableHtml(className) {
+  var tt = getClassTimetable(className);
+  var periodRows = [
+    { type: "period", num: 1 },
+    { type: "period", num: 2 },
+    { type: "break", label: "Recess 1" },
+    { type: "period", num: 3 },
+    { type: "period", num: 4 },
+    { type: "break", label: "Recess 2" },
+    { type: "period", num: 5 },
+    { type: "period", num: 6 },
+    { type: "break", label: "Lunch" },
+    { type: "period", num: 7 },
+    { type: "period", num: 8 },
+    { type: "period", num: 9 }
+  ];
+
+  var lessonCount = 0;
+  var freeCount = 0;
+
+  var html = "<div class=\"timetable-wrap\"><table class=\"timetable\"><thead><tr><th class=\"period-col\">Period</th>";
+  for (var d = 1; d <= 6; d++) { html += "<th>Day " + d + "</th>"; }
+  html += "</tr></thead><tbody>";
+
+  for (var r = 0; r < periodRows.length; r++) {
+    var row = periodRows[r];
+    if (row.type === "break") {
+      html += "<tr class=\"break-row\"><td class=\"period-col\">" + row.label + "</td>";
+      for (var dd = 0; dd < 6; dd++) { html += "<td>" + row.label + "</td>"; }
+      html += "</tr>";
+    } else {
+      var p = row.num;
+      html += "<tr><td class=\"period-col\">P" + p + "</td>";
+      for (var dc = 1; dc <= 6; dc++) {
+        var key = dc + "_" + p;
+        var entries = tt[key];
+        if (entries && entries.length > 0) {
+          lessonCount++;
+          html += "<td class=\"lesson-cell\">";
+          for (var ei = 0; ei < entries.length; ei++) {
+            if (ei > 0) html += "<div style=\"border-top:1px dashed var(--border);margin:3px 0;\"></div>";
+            var entry = entries[ei];
+            html += "<div class=\"lesson-sub\">" + entry.subject + "</div>";
+            html += "<div class=\"lesson-teacher\">" + entry.teacherShort + (entry.teacherChi ? "(" + entry.teacherChi + ")" : "") + "</div>";
+            html += "<div class=\"lesson-teacher-name\">" + entry.teacherFull + "</div>";
+          }
+          html += "</td>";
+        } else {
+          freeCount++;
+          html += "<td class=\"free-cell\">FREE</td>";
+        }
+      }
+      html += "</tr>";
+    }
+  }
+  html += "</tbody></table></div>";
+
+  return {
+    html: html,
+    lessonCount: lessonCount,
+    freeCount: freeCount
+  };
+}
+
 function renderClassInfo() {
   var container = document.getElementById("classResult");
   if (!selectedClass && !selectedSubject) {
@@ -1605,13 +1748,9 @@ function renderClassInfo() {
       if (sub === "OFF") continue;
       var classes = cls.split(",");
 
-      // Filter by selected subject
       if (selectedSubject && sub !== selectedSubject) continue;
-
-      // Filter by selected class
       if (selectedClass && classes.indexOf(selectedClass) === -1) continue;
 
-      // Build a compound key for grouping: teacher + subject + class(es)
       var matchedClasses = selectedClass ? [selectedClass] : classes;
       for (var mc = 0; mc < matchedClasses.length; mc++) {
         var groupKey = teacher.s + "|" + sub + "|" + matchedClasses[mc];
@@ -1633,7 +1772,6 @@ function renderClassInfo() {
     }
   }
 
-  // Sort by subject then by class
   assignments.sort(function(a, b) {
     if (a.subject < b.subject) return -1;
     if (a.subject > b.subject) return 1;
@@ -1642,11 +1780,10 @@ function renderClassInfo() {
     return 0;
   });
 
-  // Build title
   var titleParts = [];
   if (selectedClass) titleParts.push("Class " + selectedClass);
   if (selectedSubject) titleParts.push(selectedSubject);
-  var title = titleParts.join(" · ");
+  var title = titleParts.join(" &middot; ");
 
   var html = "<div class=\"result-card\">";
   html += "<h3>" + title + " <span class=\"count-badge\">" + assignments.length + " result" + (assignments.length !== 1 ? "s" : "") + "</span></h3>";
@@ -1662,9 +1799,18 @@ function renderClassInfo() {
     html += "</div>";
   }
 
+  // === CLASS TIMETABLE (only when a class is selected) ===
+  if (selectedClass) {
+    var ttResult = renderClassTimetableHtml(selectedClass);
+    html += "<div class=\"section-divider\"><h3>&#128197; Weekly Timetable <span class=\"count-badge\">" + ttResult.lessonCount + " lessons &middot; " + ttResult.freeCount + " free</span></h3></div>";
+    html += ttResult.html;
+  }
+
+  // === SUBJECT/TEACHER TABLE ===
   if (assignments.length === 0) {
     html += "<div class=\"empty-state\">No teaching assignments found</div>";
   } else {
+    html += "<div class=\"section-divider\"><h3>&#128218; Teaching Assignments</h3></div>";
     html += "<div class=\"subject-table-wrap\"><table class=\"subject-table\">";
     if (selectedClass && !selectedSubject) {
       html += "<thead><tr><th>Subject</th><th>Teacher</th><th>Periods/wk</th></tr></thead><tbody>";
